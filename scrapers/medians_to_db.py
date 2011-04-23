@@ -10,13 +10,11 @@ saveme = medians.load()
 
 # insert into couch db
 couch = couchdb.Server()
-try:
-    db = couch['medians']
-except:
+if not 'medians' in couch:
     couch.create('medians')
-    db = couch['medians']
+db = couch['medians']
 
-if db.get('latest'):
+if 'latest' in db:
     # delete old doc
     db.delete(db['latest'])
 db['latest'] = saveme
