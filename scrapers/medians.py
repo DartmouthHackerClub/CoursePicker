@@ -40,8 +40,7 @@ def load():
                 d['median'] = clean_row[5]
                 l.append(d)
 
-    ret = {'records':l}
-    return ret
+    return {'records':l}
 
 if __name__ == "__main__":
     print json.dumps(load())
