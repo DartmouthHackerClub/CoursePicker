@@ -93,7 +93,10 @@ fieldset{
 
 </style>
 
+<!--
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+-->
+<script type="text/javascript" src="jquery-1.5.2.min.js"></script>
 
 <script type="text/javascript">
 var empty_rows = 0;
@@ -354,12 +357,18 @@ var search_options = {
         get_search_form().find('.rows').append(row);
         empty_rows++;
     }
+    function do_search(){
+        query_url = ''; // TODO
+        $.get(query_url, function(data){
+            show_results(data);
+        });
+    }
     //RUN THIS STUFF AT PAGE LOAD
     $().ready(function(){
         add_search_row_if_we_need_one();
         //show_favorites();
         $("form#search_form input[type='submit']").click(function(){
-            show_results(results);
+            do_search();
             return false;
             });
     });
