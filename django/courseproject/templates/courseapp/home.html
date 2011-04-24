@@ -13,16 +13,18 @@ body{
     margin: auto;
     background-color: white;
     font-family: arial;
-    
 }
+
 #header{
     background-color: red;
 }
+
 #header h1{
     text-align: center;
     font-size: 3em;
     color: white;
 }
+
 #content{
     padding: 20px;
 }
@@ -75,14 +77,13 @@ fieldset{
     margin-left: 10px;
 }
 .result .offering .prof{
+    margin-left: 5px;
 }
 
 .result .offering .time{
     margin-left: 5px;
 }
-
 .result .offering .term{
-    margin-left: 5px;
 }
 .result .offering .crn{
     margin-left: 5px;
@@ -204,13 +205,14 @@ function show_results(results){
         for(key in result['current_offerings']){
             offering = result['current_offerings'][key];
             offering_div = $('<div class="offering"></div>');
+
+            term = $('<span class="term">' + offering['term'] + '</span>');
+            offering_div.append(term);
             prof = $('<span class="prof">' + offering['prof'] + '</span>');
             offering_div.append(prof);
             time = $('<span class="time">' + offering['time'] + '</span>');
             offering_div.append(time);
-            term = $('<span class="term">' + offering['term'] + '</span>');
-            offering_div.append(term);
-            crn = $('<span class="crn">' + offering['crn'] + '</span>');
+            crn = $('<span class="crn">CRN:' + offering['crn'] + '</span>');
             offering_div.append(crn);
             offerings_div.append(offering_div);
         }
