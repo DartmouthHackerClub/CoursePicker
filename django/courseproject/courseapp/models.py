@@ -9,6 +9,7 @@ class Course(models.Model):
     title = models.CharField(max_length=80, blank=True)
     dept = models.CharField(max_length=10, blank=True)      # TODO map to long name using some global mapping to long form
     number = models.IntegerField(blank=True, null=True)
+    pre_reqs = models.ManyToManyField('Course', blank=True) 
 
     def rightpad_number(self):
         return '%-3s' % self.number
@@ -54,9 +55,11 @@ class Review(models.Model):
 class Distrib(models.Model):
     name = models.CharField(max_length=60)
 
+'''
 admin.site.register(Profile)
 admin.site.register(Course)
 admin.site.register(CourseOffering)
 admin.site.register(Professor)
 admin.site.register(Review)
 admin.site.register(Distrib)
+'''
