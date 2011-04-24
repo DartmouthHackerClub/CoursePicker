@@ -7,13 +7,13 @@ class Profile(models.Model):
 
 class Course(models.Model):
     title = models.CharField(max_length=80, blank=True)
-    professors = models.ManyToManyField('Professor', blank=True)
     dept = models.CharField(max_length=10, blank=True)      # TODO map to long name using some global mapping to long form
     number = models.IntegerField(blank=True, null=True)
 
 class CourseOffering(models.Model):
     course = models.ForeignKey('Course')
     distrib = models.ManyToManyField('Distrib', blank=True)
+    professors = models.ManyToManyField('Professor', blank=True)
 
     term = models.CharField(max_length=5, blank=True)
     section = models.IntegerField(blank=True, null=True)
@@ -31,7 +31,6 @@ class CourseOffering(models.Model):
     median = models.CharField(max_length=10, blank=True) 
 
 class Professor(models.Model):
-    key = models.CharField(max_length=60)
     name = models.CharField(max_length=60)
     text = models.TextField()
 
