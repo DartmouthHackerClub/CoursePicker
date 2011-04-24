@@ -1,0 +1,420 @@
+<html>
+<head>
+<title></title>
+
+
+<style type="text/css">
+html{
+    width: 100%;
+    background-color: gray;
+}
+body{
+    width: 700px;
+    margin: auto;
+    background-color: white;
+    font-family: arial;
+    
+}
+#header{
+    background-color: red;
+}
+#header h1{
+    text-align: center;
+    font-size: 3em;
+    color: white;
+}
+#content{
+    padding: 20px;
+}
+
+fieldset{
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.search_row{
+}
+
+.search_row .left_side{
+    width: 300px;
+    display: inline-block;
+}
+.search_row .left_side select{
+    width: 100%;
+}
+
+.search_row .right_side{
+    width: 300px;
+    display: inline-block;
+}
+.search_row .right_side input[type='text']{
+    width: 100%;
+}
+
+.criteria{
+}
+
+.result{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.result .dept_num{
+    display: block;
+    width: 100%;
+    font-size: 1.3em;
+}
+.result .desc{
+    display: block;
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.result .offering{
+    margin-left: 10px;
+}
+.result .offering .prof{
+}
+
+.result .offering .time{
+    margin-left: 5px;
+}
+
+.result .offering .term{
+    margin-left: 5px;
+}
+.result .offering .crn{
+    margin-left: 5px;
+}
+
+
+
+</style>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+
+<script type="text/javascript">
+var empty_rows = 0;
+
+/*
+FOR LATER....
+var favorites = {
+    0 : {
+        'dept' : 'COSC',
+        'number' : '005',
+        'time' : '10',
+        'title' : 'Intro Computer Science',
+        'quarter' : '11F',
+        'prof' : 'Balkcom',
+        },
+};
+
+function show_favorites(){
+    show_in_here = $('#favorites');
+    favorites_dom_elem = $('<span></span>');
+    for(var key in favorites){
+        favorite = favorites[key];
+        favorite_li = $("<li>hi</li>");
+        timeslot_div = get_or_create_favorite_timeslot_div(favorite['timeslot']);
+        timeslot_div.append(favorite_li);
+    }
+    show_in_here.append(favorites_dom_elem);
+}
+
+function get_or_create_favorite_timeslot_div(timeslot){
+    class = 'favorite_timeslot_div_' + timeslot
+    existing_div = $('.' + class);
+    if(existing_div){
+        return existing_div;
+    }
+    else{
+        new_div = $('<div></div>');
+        new_div.attr('class', class);
+        $('#favorites').append();
+    }
+}
+*/
+
+
+var results = [
+    {
+        'dept' : 'COSC',
+        'number' : '005',
+        'desc' : "\
+            The final term of a year-long graduate-level course in biochemistry, cell and molecular biology. A continuation of Biochemistry 101 and Genetics 102. Topics include cell signaling; neurobiology; metabolism; cytoskeleton, cell shape and movement; mitosis and meiosis, regulation of cell growth and division; oncogenes and tumor suppressor genes; proteosomes and protein turnover; apoptosis. \
+            ",
+        'current_offerings' : [
+            {
+                'prof': 'Prasad',
+                'time': '10A',
+                'term': '11F',
+                'crn': '03428347',
+                },
+            {
+                'prof': 'Balkcom',
+                'time': '10',
+                'term': '10F',
+                'crn': '9423487',
+                },
+            ],
+        'past_offerings' : [
+            {
+                'prof': 'Cormen',
+                'time': '10A',
+                'term': '09F',
+                'crn': '0383947',
+                },
+            {
+                'prof': 'Cormen',
+                'time': '10',
+                'term': '08F',
+                'crn': '402398',
+                },
+            ],
+        },
+    {
+        'dept' : 'COSC',
+        'number' : '001',
+        'desc' : "\
+            The first term of a year-long graduate-level course in biochemistry, cell and molecular biology. Topics include structure, function, and biosynthesis of proteins, nucleic acids and lipids; enzyme kinetics and enzyme mechanisms; gene regulation, transcription and translation; recombinant DNA technology; nuclear trafficking, the secretory pathway, and endocytosis. Note that this course begins prior to the official start of fall-term classes, and students outside of the MCB program should contact the Biochemistry Department for the date of the first lecture. \
+            ",
+        'current_offerings' : [
+            {
+                'prof': 'Prasad',
+                'time': '2A',
+                'term': '10S',
+                'crn': '093402839487',
+                },
+            ],
+        },
+    ];
+
+function show_results(results){
+    results_div = get_or_create_results_div();
+    for(key in results){
+        result = results[key];
+        result_div = $('<div class="result"></div>');
+        dept_num = $('<span class="dept_num">' + result['dept']+result['number'] + '</span>');
+        result_div.append(dept_num);
+        desc = $('<span class="desc">' + result['desc'] + '</span>');
+        result_div.append(desc);
+        offerings_div = $('<div class="offerings"><h4>Current Offerings</h4></div>');
+        result_div.append(offerings_div);
+        for(key in result['current_offerings']){
+            offering = result['current_offerings'][key];
+            offering_div = $('<div class="offering"></div>');
+            prof = $('<span class="prof">' + offering['prof'] + '</span>');
+            offering_div.append(prof);
+            time = $('<span class="time">' + offering['time'] + '</span>');
+            offering_div.append(time);
+            term = $('<span class="term">' + offering['term'] + '</span>');
+            offering_div.append(term);
+            crn = $('<span class="crn">' + offering['crn'] + '</span>');
+            offering_div.append(crn);
+            offerings_div.append(offering_div);
+        }
+        results_div.append(result_div);
+    }
+}
+
+function get_or_create_results_div(){
+    return $('#results');
+}
+
+var search_options = {
+    'prof':  {
+        'long_name' : 'Professor',
+        'input_field' : '<input type="text" name="prof" id="" value=""/>',
+        },
+    'title':  {
+        'long_name' : 'Title',
+        'input_field' : '<input type="text" name="title" id="" value=""/>',
+        },
+    'dept':  {
+        'long_name' : 'Department',
+        'input_field' : '<input type="text" name="" id="" value=""/>',
+        },
+    'time':  {
+        'long_name' : 'Meeting Time',
+        'input_field' : '\
+            <input type="checkbox" />8, \
+            <input type="checkbox" />9L, \
+            <input type="checkbox" />9S, \
+            <input type="checkbox" />10, \
+            <input type="checkbox" />11, \
+            <input type="checkbox" />12, \
+            <input type="checkbox" />2, \
+            <input type="checkbox" />10A, \
+            <input type="checkbox" />2A, \
+            <input type="checkbox" />3A, \
+            <input type="checkbox" />3B, \
+            '
+        },
+    'quarter':  {
+        'long_name' : 'Quarter',
+        'input_field' : '<input type="text" name="" id="" value=""/>',
+        },
+    'distrib':  {
+        'long_name' : 'Distrib',
+        'input_field' : '\
+            <input type="checkbox" />ART, \
+            <input type="checkbox" />LIT, \
+            <input type="checkbox" />TMV, \
+            <input type="checkbox" />INT, \
+            <input type="checkbox" />SOC, \
+            <input type="checkbox" />QDS, \
+            <input type="checkbox" />SCI, \
+            <input type="checkbox" />SLA, \
+            <input type="checkbox" />TAS, \
+            <input type="checkbox" />TLA',
+        },
+    'wcult':  {
+        'long_name' : 'World Culture',
+        'input_field' : '\
+            <input type="checkbox" name="wcult_w" value="1"/>W, \
+            <input type="checkbox" name="wcult_nw" value="1"/>NW, \
+            <input type="checkbox" name="wcult_ci" value="1"/>CI',
+        },
+    'median_grade':  {
+        'long_name' : 'Median Grade',
+        'input_field' : '',
+        },
+    'NRO':  {
+        'long_name' : 'Can NRO?',
+        'input_field' : '<input type="checkbox" checked="checked"/>Heck Yeah',
+        },
+    'enrollment_cap':  {
+        'long_name' : 'Enrollment Cap',
+        'input_field' : '<input type="text" name="" id="" value="" />',
+        },
+    'space_left':  {
+        'long_name' : 'Space Left?',
+        'input_field' : '<input type="checkbox" checked="checked" />Heck Yeah',
+        },
+    };
+
+    function make_left_side_dropdown(){
+        var dropdown = $('<select name="criteria"></select>');
+        var first_option = $('<option value="null">---Choose Criteria---</option>');
+        dropdown.append(first_option);
+        for(var key in search_options){
+            var settings = search_options[key];
+            var option_tag = $('<option></option>');
+            option_tag.attr('value', key);
+            option_tag.html(settings['long_name']);
+            dropdown.append(option_tag);
+        }
+        dropdown.change(function(){
+            choice = $(this).val();
+            if(choice == 'null'){
+                var right_side_html = '';
+                if(!$(this).data('is_empty')){
+                    empty_rows++;
+                    $(this).data('is_empty', true);
+                }
+            }
+            else{
+                var right_side_html = search_options[choice]['input_field'];
+                if($(this).data('is_empty')){
+                    empty_rows--;
+                    $(this).data('is_empty', false);
+                }
+            }
+            var right_side = $(this).parents('fieldset.search_row').find('.right_side')
+            right_side.html(right_side_html);
+            add_search_row_if_we_need_one();
+        });
+        dropdown.data('is_empty', true);
+        return dropdown
+        
+    }
+
+    function add_search_row_if_we_need_one(){
+        while(empty_rows<=0){
+            insert_search_row_dom_element();
+        }
+    }
+    function make_search_row_dom_element(){
+        var row = $(' <fieldset class="search_row"> </fieldset> ');
+        var left_side = $(' <fieldset class="left_side"> </fieldset> ');
+        left_side.append(make_left_side_dropdown());
+        var right_side = $(' <fieldset class="right_side"></fieldset> ');
+        row.append(left_side);
+        row.append(right_side);
+        return row[0];
+    }
+    function get_search_form(){
+        return $('#search_form');
+    }
+    function insert_search_row_dom_element(){
+        row = make_search_row_dom_element();
+        get_search_form().find('.rows').append(row);
+        empty_rows++;
+    }
+    //RUN THIS STUFF AT PAGE LOAD
+    $().ready(function(){
+        add_search_row_if_we_need_one();
+        //show_favorites();
+        $("form#search_form input[type='submit']").click(function(){
+            show_results(results);
+            return false;
+            });
+    });
+
+</script>
+
+</head>
+<body>
+
+
+<div id="header">
+<h1>
+Hacker Club's Course Picker
+</h1>
+</div>
+
+
+
+<div id="content">
+
+<div id="search">
+<h2>
+Search
+</h2>
+
+<form method="" action="" id="search_form">
+<fieldset class="rows">
+</fieldset>
+<input type="submit" value="GO FOR IT"/>
+</form>
+</div>
+
+
+<div id="results">
+
+<h2>
+Results
+</h2>
+
+
+
+</div>
+
+<!--
+<div id="favorites">
+
+<h2>
+Favorites
+</h2>
+
+
+
+</div>
+-->
+
+
+
+</div>
+</body>
+</html>
