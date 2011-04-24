@@ -11,6 +11,12 @@ class Course(models.Model):
     dept = models.CharField(max_length=10, blank=True)      # TODO map to long name using some global mapping to long form
     number = models.IntegerField(blank=True, null=True)
 
+    def rightpad_number(self):
+        return '%-3s' % self.number
+
+    def __unicode__(self):
+        return '%s-%s' % (self.dept, self.number)
+
 class CourseOffering(models.Model):
     course = models.ForeignKey('Course')
     distrib = models.ManyToManyField('Distrib', blank=True)
@@ -29,6 +35,12 @@ class CourseOffering(models.Model):
     seminar = models.NullBooleanField(blank=True, null=True)
     examdate = models.DateField(blank=True, null=True)
     median = models.CharField(max_length=10, blank=True) 
+
+    def __unicode__(self):
+        return '%s-%s-%s-%s' % (self.term, self.course.dept, self.course.number, self.section)
+
+    def rightpad_section(self):
+        return '%-3s' % self.section
 
 class Professor(models.Model):
     key = models.CharField(max_length=60)
