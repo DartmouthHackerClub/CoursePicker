@@ -13,6 +13,8 @@ body{
     margin: auto;
     background-color: white;
     font-family: arial;
+    font-size: 14px;
+    color: #4d4d4d;
 }
 
 #header{
@@ -34,6 +36,16 @@ fieldset{
     padding: 0;
     background: none;
     border: none;
+}
+
+#search_form{
+    font-size: 1.2em;
+}
+
+#search_form input[type='submit']{
+    display: inline-block;
+    font-size: 1.2em;
+    
 }
 
 .search_row{
@@ -320,6 +332,7 @@ var search_options = {
                 }
             }
             else{
+                search_options[choice]['in_use'] = true;
                 var right_side_html = search_options[choice]['input_field'];
                 if($(this).data('is_empty')){
                     empty_rows--;
@@ -356,6 +369,7 @@ var search_options = {
         row = make_search_row_dom_element();
         get_search_form().find('.rows').append(row);
         empty_rows++;
+        return row;
     }
     function do_search(){
         query_url = ''; // TODO
@@ -365,7 +379,22 @@ var search_options = {
     }
     //RUN THIS STUFF AT PAGE LOAD
     $().ready(function(){
-        add_search_row_if_we_need_one();
+        for(key in search_options){
+            search_options[key]['in_use'] = false;
+        }
+
+        row1 = insert_search_row_dom_element();
+        row1 = $(row1);
+        row2 = insert_search_row_dom_element();
+        row2 = $(row2);
+
+        row1.find("select option:selected").removeAttr('selected');
+        row1.find("select option[value='time']").attr('selected', 'selected');
+        row1.find("select").change();
+
+        row2.find("select option:selected").removeAttr('selected');
+        row2.find("select option[value='dept']").attr('selected', 'selected');
+        row2.find("select").change();
         //show_favorites();
         $("form#search_form input[type='submit']").click(function(){
             do_search();
