@@ -52,28 +52,37 @@ fieldset{
 
 #search_form{
     font-size: 1.2em;
+    text-align: right;
+    background-color: #ededed;
+    padding: 20px;
 }
 
 #search_form input[type='submit']{
     display: inline-block;
     font-size: 1.2em;
-    
 }
 
 .search_row{
+    text-align: left;
+    height: 50px;
 }
 
 .search_row .left_side{
     width: 300px;
     display: inline-block;
+    vertical-align: middle;
+    height: 100%;
 }
 .search_row .left_side select{
     width: 100%;
 }
 
 .search_row .right_side{
+    height: 100%;
+    vertical-align: middle;
     width: 300px;
     display: inline-block;
+    padding: 0 10px 0 10px;
 }
 .search_row .right_side input[type='text']{
     width: 100%;
@@ -113,6 +122,12 @@ fieldset{
     margin-left: 5px;
 }
 
+h3{
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+
+}
 
 
 </style>
@@ -267,18 +282,20 @@ var search_options = {
     'time':  {
         'long_name' : 'Meeting Time',
         'input_field' : '\
-            <input type="checkbox" />8, \
-            <input type="checkbox" />9L, \
-            <input type="checkbox" />9S, \
-            <input type="checkbox" />10, \
-            <input type="checkbox" />11, \
-            <input type="checkbox" />12, \
-            <input type="checkbox" />2, \
-            <input type="checkbox" />10A, \
-            <input type="checkbox" />2A, \
-            <input type="checkbox" />3A, \
-            <input type="checkbox" />3B, \
-            '
+            <span style="font-size: .7em;"> \
+            <input type="checkbox" />8 \
+            <input type="checkbox" />9L \
+            <input type="checkbox" />9S \
+            <input type="checkbox" />10 \
+            <input type="checkbox" />11 \
+            <input type="checkbox" />12 \
+            <input type="checkbox" />2 \
+            <input type="checkbox" />10A \
+            <input type="checkbox" />2A \
+            <input type="checkbox" />3A \
+            <input type="checkbox" />3B \
+            </span> \
+            ',
         },
     'quarter':  {
         'long_name' : 'Quarter',
@@ -287,23 +304,27 @@ var search_options = {
     'distrib':  {
         'long_name' : 'Distrib',
         'input_field' : '\
-            <input type="checkbox" />ART, \
-            <input type="checkbox" />LIT, \
-            <input type="checkbox" />TMV, \
-            <input type="checkbox" />INT, \
-            <input type="checkbox" />SOC, \
-            <input type="checkbox" />QDS, \
-            <input type="checkbox" />SCI, \
-            <input type="checkbox" />SLA, \
-            <input type="checkbox" />TAS, \
-            <input type="checkbox" />TLA',
+            <span style="font-size: .5em;"> \
+            <input type="checkbox" />ART \
+            <input type="checkbox" />LIT \
+            <input type="checkbox" />TMV \
+            <input type="checkbox" />INT \
+            <input type="checkbox" />SOC\
+            <input type="checkbox" />QDS \
+            <input type="checkbox" />SCI \
+            <input type="checkbox" />SLA \
+            <input type="checkbox" />TAS \
+            <input type="checkbox" />TLA \
+            </span> \
+            ',
         },
     'wcult':  {
         'long_name' : 'World Culture',
         'input_field' : '\
-            <input type="checkbox" name="wcult_w" value="1"/>W, \
-            <input type="checkbox" name="wcult_nw" value="1"/>NW, \
-            <input type="checkbox" name="wcult_ci" value="1"/>CI',
+            <input type="checkbox" name="wcult_w" value="1"/>W \
+            <input type="checkbox" name="wcult_nw" value="1"/>NW \
+            <input type="checkbox" name="wcult_ci" value="1"/>CI \
+            ',
         },
     'median_grade':  {
         'long_name' : 'Median Grade',
@@ -336,6 +357,8 @@ var search_options = {
         }
         dropdown.change(function(){
             choice = $(this).val();
+            old_value = dropdown.data('old_value');
+            dropdown.data('old_value', choice);
             if(choice == 'null'){
                 var right_side_html = '';
                 if(!$(this).data('is_empty')){
@@ -351,11 +374,26 @@ var search_options = {
                     $(this).data('is_empty', false);
                 }
             }
+            if(old_value){
+                search_options[old_value]['in_use'] = false;
+
+            }
             var right_side = $(this).parents('fieldset.search_row').find('.right_side')
             right_side.html(right_side_html);
             add_search_row_if_we_need_one();
         });
         dropdown.data('is_empty', true);
+        dropdown.mouseenter(function(){
+            for(key in search_options){
+                if(search_options[key]['in_use']){
+                    $(this).find("option[value='" + key + "']").hide();
+                    
+                }
+                else{
+                    $(this).find("option[value='" + key + "']").show();
+                }
+            }
+        });
         return dropdown
         
     }
@@ -397,16 +435,20 @@ var search_options = {
 
         row1 = insert_search_row_dom_element();
         row1 = $(row1);
+        /*
         row2 = insert_search_row_dom_element();
         row2 = $(row2);
+        */
 
         row1.find("select option:selected").removeAttr('selected');
         row1.find("select option[value='time']").attr('selected', 'selected');
         row1.find("select").change();
 
+        /*
         row2.find("select option:selected").removeAttr('selected');
         row2.find("select option[value='dept']").attr('selected', 'selected');
         row2.find("select").change();
+        */
         //show_favorites();
         $("form#search_form input[type='submit']").click(function(){
             do_search();
@@ -422,10 +464,10 @@ var search_options = {
 
 <div id="header">
 <h1>
-Course Picker
+Pickr
 </h1>
 <h2>
-by hacker club
+by <a href="http://hacktown.cs.dartmouth.edu">hacker club</a>
 </h2>
 </div>
 
@@ -434,23 +476,23 @@ by hacker club
 <div id="content">
 
 <div id="search">
-<h2>
+<h3>
 Search
-</h2>
+</h3>
 
 <form method="" action="" id="search_form">
 <fieldset class="rows">
 </fieldset>
-<input type="submit" value="GO FOR IT"/>
+<input type="submit" value="Search &raquo;"/>
 </form>
 </div>
 
 
 <div id="results">
 
-<h2>
+<h3>
 Results
-</h2>
+</h3>
 
 
 
