@@ -285,6 +285,24 @@ function get_or_create_results_div(){
     return results_div;
 }
 
+function generate_input_field_quarter(){
+    quarters = [
+        '11X',
+        '11F',
+        '12W',
+        '12S',
+        '12X',
+        ];
+    html = '';
+    html += '<select name="quarter">';
+    for(key in quarters){
+        quarter = quarters[key];
+        html+= '<option value="' + quarter + '">' + quarter + '</option>';
+    }
+    html += '</select>';
+    return html;
+}
+
 function generate_input_field_time(){
     times = [
         '8',
@@ -303,7 +321,7 @@ function generate_input_field_time(){
     html += '<span style="font-size: .7em;">';
     for(key in times){
         time = times[key];
-        html+= '<input type="checkbox" name="' + time + '" />' + time
+        html+= '<input type="checkbox" name="' + time + '" />' + time;
     }
     html += '</span>';
     return html;
@@ -326,7 +344,7 @@ function generate_input_field_distrib(){
     html += '<span style="font-size: .7em;">';
     for(key in distribs){
         distrib = distribs[key];
-        html+= '<input type="checkbox" name="' + distrib + '" />' + distrib
+        html+= '<input type="checkbox" name="' + distrib + '" />' + distrib;
     }
     html += '</span>';
     return html;
@@ -352,7 +370,7 @@ var search_options = {
         },
     'quarter':  {
         'long_name' : 'Quarter',
-        'input_field' : '<input type="text" name="" id="" value=""/>',
+        'input_field' : generate_input_field_quarter(),
         },
     'distrib':  {
         'long_name' : 'Distrib',
@@ -368,16 +386,26 @@ var search_options = {
         },
     'median_grade':  {
         'long_name' : 'Median Grade',
-        'input_field' : '',
+        'input_field' : ' \
+            <select name="median_grade" > \
+                <option value=">=A">A</option> \
+                <option value=">=A-">A- or higher</option> \
+                <option value=">=B+">B+ or higher</option> \
+                <option value=">=B">B or higher</option> \
+                <option value=">=B-">B- or higher</option> \
+            </select> \
+            ',
         },
     'NRO':  {
         'long_name' : 'Can NRO?',
         'input_field' : '<input type="checkbox" checked="checked"/>Heck Yeah',
         },
+    /*
     'enrollment_cap':  {
         'long_name' : 'Enrollment Cap',
         'input_field' : '<input type="text" name="" id="" value="" />',
         },
+    */
     'space_left':  {
         'long_name' : 'Space Left?',
         'input_field' : '<input type="checkbox" checked="checked" />Heck Yeah',
