@@ -51,6 +51,9 @@ fieldset{
 }
 
 #search_form{
+    border-radius: 10px;
+    -border-radius: 10px;
+    -moz-border-radius: 10px;
     font-size: 1.2em;
     text-align: right;
     background-color: #ededed;
@@ -138,7 +141,6 @@ h3{
 <script type="text/javascript" src="jquery-1.5.2.min.js"></script>
 
 <script type="text/javascript">
-var empty_rows = 0;
 
 /*
 FOR LATER....
@@ -179,6 +181,8 @@ function get_or_create_favorite_timeslot_div(timeslot){
 }
 */
 
+
+//NOTE/TODO: the below is just bootsrapping--it's for testing. it'd be nice to get the actual results in this format. once we're rolling, we can remove this big struct
 
 var results = [
     {
@@ -233,6 +237,8 @@ var results = [
         },
     ];
 
+var empty_rows = 0;
+
 function show_results(results){
     results_div = get_or_create_results_div();
     for(key in results){
@@ -263,39 +269,83 @@ function show_results(results){
 }
 
 function get_or_create_results_div(){
-    return $('#results');
+    results_div = $('#results');
+    if(results_div.length < 1){
+        results_div = $('\
+            <div id="results"> \
+            <h3> \
+            Results \
+            </h3> \
+            ');
+    }
+    $('#results_container').append(results_div);
+    return results_div;
 }
+
+function generate_input_field_time(){
+    times = [
+        '8',
+        '9L',
+        '9S',
+        '10',
+        '11',
+        '12',
+        '2',
+        '10A',
+        '2A',
+        '3A',
+        '3B',
+        ];
+    html = '';
+    html += '<span style="font-size: .7em;">';
+    for(key in times){
+        time = times[key];
+        html+= '<input type="checkbox" name="' + time + '" />' + time
+    }
+    html += '</span>';
+    return html;
+}
+
+function generate_input_field_distrib(){
+    distribs = [
+        'ART',
+        'LIT',
+        'TMV',
+        'INT',
+        'SOC',
+        'QDS',
+        'SCI',
+        'SLA',
+        'TAS',
+        'TLA',
+        ];
+    html = '';
+    html += '<span style="font-size: .7em;">';
+    for(key in distribs){
+        distrib = distribs[key];
+        html+= '<input type="checkbox" name="' + distrib + '" />' + distrib
+    }
+    html += '</span>';
+    return html;
+}
+
 
 var search_options = {
     'prof':  {
         'long_name' : 'Professor',
-        'input_field' : '<input type="text" name="prof" id="" value=""/>',
+        'input_field' : '<input type="text" name="prof" id="prof" value=""/>',
         },
     'title':  {
         'long_name' : 'Title',
-        'input_field' : '<input type="text" name="title" id="" value=""/>',
+        'input_field' : '<input type="text" name="title" id="title" value=""/>',
         },
     'dept':  {
         'long_name' : 'Department',
-        'input_field' : '<input type="text" name="" id="" value=""/>',
+        'input_field' : '<input type="text" name="dept" id="dept" value=""/>',
         },
     'time':  {
         'long_name' : 'Meeting Time',
-        'input_field' : '\
-            <span style="font-size: .7em;"> \
-            <input type="checkbox" />8 \
-            <input type="checkbox" />9L \
-            <input type="checkbox" />9S \
-            <input type="checkbox" />10 \
-            <input type="checkbox" />11 \
-            <input type="checkbox" />12 \
-            <input type="checkbox" />2 \
-            <input type="checkbox" />10A \
-            <input type="checkbox" />2A \
-            <input type="checkbox" />3A \
-            <input type="checkbox" />3B \
-            </span> \
-            ',
+        'input_field' : generate_input_field_time(),
         },
     'quarter':  {
         'long_name' : 'Quarter',
@@ -303,20 +353,7 @@ var search_options = {
         },
     'distrib':  {
         'long_name' : 'Distrib',
-        'input_field' : '\
-            <span style="font-size: .5em;"> \
-            <input type="checkbox" />ART \
-            <input type="checkbox" />LIT \
-            <input type="checkbox" />TMV \
-            <input type="checkbox" />INT \
-            <input type="checkbox" />SOC\
-            <input type="checkbox" />QDS \
-            <input type="checkbox" />SCI \
-            <input type="checkbox" />SLA \
-            <input type="checkbox" />TAS \
-            <input type="checkbox" />TLA \
-            </span> \
-            ',
+        'input_field' : generate_input_field_distrib(),
         },
     'wcult':  {
         'long_name' : 'World Culture',
@@ -404,10 +441,10 @@ var search_options = {
         }
     }
     function make_search_row_dom_element(){
-        var row = $(' <fieldset class="search_row"> </fieldset> ');
-        var left_side = $(' <fieldset class="left_side"> </fieldset> ');
+        row = $(' <fieldset class="search_row"> </fieldset> ');
+        left_side = $(' <fieldset class="left_side"> </fieldset> ');
         left_side.append(make_left_side_dropdown());
-        var right_side = $(' <fieldset class="right_side"></fieldset> ');
+        right_side = $(' <fieldset class="right_side"></fieldset> ');
         row.append(left_side);
         row.append(right_side);
         return row[0];
@@ -422,10 +459,15 @@ var search_options = {
         return row;
     }
     function do_search(){
+        /*
+        // once the db actually works, uncomment this and make it happen
         query_url = ''; // TODO
         $.get(query_url, function(data){
             show_results(data);
         });
+        */
+        //until then, just do this:
+        show_results(results);
     }
     //RUN THIS STUFF AT PAGE LOAD
     $().ready(function(){
@@ -488,14 +530,7 @@ Search
 </div>
 
 
-<div id="results">
-
-<h3>
-Results
-</h3>
-
-
-
+<div id="results_container">
 </div>
 
 <!--
