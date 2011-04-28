@@ -240,7 +240,8 @@ var results = [
 var empty_rows = 0;
 
 function show_results(results){
-    results_div = get_or_create_results_div();
+    the_results_div = get_or_create_results_div().find('#the_results');
+    the_results_div.empty();
     for(key in results){
         result = results[key];
         result_div = $('<div class="result"></div>');
@@ -264,7 +265,7 @@ function show_results(results){
             offering_div.append(crn);
             offerings_div.append(offering_div);
         }
-        results_div.append(result_div);
+        the_results_div.append(result_div);
     }
 }
 
@@ -276,6 +277,8 @@ function get_or_create_results_div(){
             <h3> \
             Results \
             </h3> \
+            <div id="the_results"> \
+            </div> \
             ');
     }
     $('#results_container').append(results_div);
