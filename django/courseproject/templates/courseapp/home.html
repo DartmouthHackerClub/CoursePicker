@@ -6,23 +6,37 @@
 <style type="text/css">
 html{
     width: 100%;
-    background-color: gray;
+/*    background-color: gray;
+*/
 }
 body{
     width: 700px;
     margin: auto;
     background-color: white;
     font-family: arial;
+    font-size: 14px;
+    color: #4d4d4d;
 }
 
 #header{
+/*
     background-color: red;
+*/
 }
 
 #header h1{
-    text-align: center;
-    font-size: 3em;
-    color: white;
+    text-align: right;
+    font-size: 4em;
+    color: #666666;
+    margin: 0;
+    padding: 0;
+}
+#header h2{
+    text-align: right;
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    color: #666666;
 }
 
 #content{
@@ -36,20 +50,42 @@ fieldset{
     border: none;
 }
 
+#search_form{
+    border-radius: 10px;
+    -border-radius: 10px;
+    -moz-border-radius: 10px;
+    font-size: 1.2em;
+    text-align: right;
+    background-color: #ededed;
+    padding: 20px;
+}
+
+#search_form input[type='submit']{
+    display: inline-block;
+    font-size: 1.2em;
+}
+
 .search_row{
+    text-align: left;
+    height: 50px;
 }
 
 .search_row .left_side{
     width: 300px;
     display: inline-block;
+    vertical-align: middle;
+    height: 100%;
 }
 .search_row .left_side select{
     width: 100%;
 }
 
 .search_row .right_side{
+    height: 100%;
+    vertical-align: middle;
     width: 300px;
     display: inline-block;
+    padding: 0 10px 0 10px;
 }
 .search_row .right_side input[type='text']{
     width: 100%;
@@ -89,14 +125,22 @@ fieldset{
     margin-left: 5px;
 }
 
+h3{
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+
+}
 
 
 </style>
 
+<!--
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+-->
+<script type="text/javascript" src="jquery-1.5.2.min.js"></script>
 
 <script type="text/javascript">
-var empty_rows = 0;
 
 /*
 FOR LATER....
@@ -137,6 +181,8 @@ function get_or_create_favorite_timeslot_div(timeslot){
 }
 */
 
+
+//NOTE/TODO: the below is just bootsrapping--it's for testing. it'd be nice to get the actual results in this format. once we're rolling, we can remove this big struct
 
 var results = [
     {
@@ -191,8 +237,11 @@ var results = [
         },
     ];
 
+var empty_rows = 0;
+
 function show_results(results){
-    results_div = get_or_create_results_div();
+    the_results_div = get_or_create_results_div().find('#the_results');
+    the_results_div.empty();
     for(key in results){
         result = results[key];
         result_div = $('<div class="result"></div>');
@@ -216,80 +265,147 @@ function show_results(results){
             offering_div.append(crn);
             offerings_div.append(offering_div);
         }
-        results_div.append(result_div);
+        the_results_div.append(result_div);
     }
 }
 
 function get_or_create_results_div(){
-    return $('#results');
+    results_div = $('#results');
+    if(results_div.length < 1){
+        results_div = $('\
+            <div id="results"> \
+            <h3> \
+            Results \
+            </h3> \
+            <div id="the_results"> \
+            </div> \
+            ');
+    }
+    $('#results_container').append(results_div);
+    return results_div;
 }
+
+function generate_input_field_quarter(){
+    quarters = [
+        '11X',
+        '11F',
+        '12W',
+        '12S',
+        '12X',
+        ];
+    html = '';
+    html += '<select name="quarter">';
+    for(key in quarters){
+        quarter = quarters[key];
+        html+= '<option value="' + quarter + '">' + quarter + '</option>';
+    }
+    html += '</select>';
+    return html;
+}
+
+function generate_input_field_time(){
+    times = [
+        '8',
+        '9L',
+        '9S',
+        '10',
+        '11',
+        '12',
+        '2',
+        '10A',
+        '2A',
+        '3A',
+        '3B',
+        ];
+    html = '';
+    html += '<span style="font-size: .7em;">';
+    for(key in times){
+        time = times[key];
+        html+= '<input type="checkbox" name="' + time + '" />' + time;
+    }
+    html += '</span>';
+    return html;
+}
+
+function generate_input_field_distrib(){
+    distribs = [
+        'ART',
+        'LIT',
+        'TMV',
+        'INT',
+        'SOC',
+        'QDS',
+        'SCI',
+        'SLA',
+        'TAS',
+        'TLA',
+        ];
+    html = '';
+    html += '<span style="font-size: .7em;">';
+    for(key in distribs){
+        distrib = distribs[key];
+        html+= '<input type="checkbox" name="' + distrib + '" />' + distrib;
+    }
+    html += '</span>';
+    return html;
+}
+
 
 var search_options = {
     'prof':  {
         'long_name' : 'Professor',
-        'input_field' : '<input type="text" name="prof" id="" value=""/>',
+        'input_field' : '<input type="text" name="prof" id="prof" value=""/>',
         },
     'title':  {
         'long_name' : 'Title',
-        'input_field' : '<input type="text" name="title" id="" value=""/>',
+        'input_field' : '<input type="text" name="title" id="title" value=""/>',
         },
     'dept':  {
         'long_name' : 'Department',
-        'input_field' : '<input type="text" name="" id="" value=""/>',
+        'input_field' : '<input type="text" name="dept" id="dept" value=""/>',
         },
     'time':  {
         'long_name' : 'Meeting Time',
-        'input_field' : '\
-            <input type="checkbox" />8, \
-            <input type="checkbox" />9L, \
-            <input type="checkbox" />9S, \
-            <input type="checkbox" />10, \
-            <input type="checkbox" />11, \
-            <input type="checkbox" />12, \
-            <input type="checkbox" />2, \
-            <input type="checkbox" />10A, \
-            <input type="checkbox" />2A, \
-            <input type="checkbox" />3A, \
-            <input type="checkbox" />3B, \
-            '
+        'input_field' : generate_input_field_time(),
         },
     'quarter':  {
         'long_name' : 'Quarter',
-        'input_field' : '<input type="text" name="" id="" value=""/>',
+        'input_field' : generate_input_field_quarter(),
         },
     'distrib':  {
         'long_name' : 'Distrib',
-        'input_field' : '\
-            <input type="checkbox" />ART, \
-            <input type="checkbox" />LIT, \
-            <input type="checkbox" />TMV, \
-            <input type="checkbox" />INT, \
-            <input type="checkbox" />SOC, \
-            <input type="checkbox" />QDS, \
-            <input type="checkbox" />SCI, \
-            <input type="checkbox" />SLA, \
-            <input type="checkbox" />TAS, \
-            <input type="checkbox" />TLA',
+        'input_field' : generate_input_field_distrib(),
         },
     'wcult':  {
         'long_name' : 'World Culture',
         'input_field' : '\
-            <input type="checkbox" name="wcult_w" value="1"/>W, \
-            <input type="checkbox" name="wcult_nw" value="1"/>NW, \
-            <input type="checkbox" name="wcult_ci" value="1"/>CI',
+            <input type="checkbox" name="wcult_w" value="1"/>W \
+            <input type="checkbox" name="wcult_nw" value="1"/>NW \
+            <input type="checkbox" name="wcult_ci" value="1"/>CI \
+            ',
         },
     'median_grade':  {
         'long_name' : 'Median Grade',
-        'input_field' : '',
+        'input_field' : ' \
+            <select name="median_grade" > \
+                <option value=">=A">A</option> \
+                <option value=">=A-">A- or higher</option> \
+                <option value=">=B+">B+ or higher</option> \
+                <option value=">=B">B or higher</option> \
+                <option value=">=B-">B- or higher</option> \
+            </select> \
+            ',
         },
     'NRO':  {
         'long_name' : 'Can NRO?',
         'input_field' : '<input type="checkbox" checked="checked"/>Heck Yeah',
         },
+    /*
     'enrollment_cap':  {
         'long_name' : 'Enrollment Cap',
         'input_field' : '<input type="text" name="" id="" value="" />',
         },
+    */
     'space_left':  {
         'long_name' : 'Space Left?',
         'input_field' : '<input type="checkbox" checked="checked" />Heck Yeah',
@@ -309,6 +425,8 @@ var search_options = {
         }
         dropdown.change(function(){
             choice = $(this).val();
+            old_value = dropdown.data('old_value');
+            dropdown.data('old_value', choice);
             if(choice == 'null'){
                 var right_side_html = '';
                 if(!$(this).data('is_empty')){
@@ -317,17 +435,33 @@ var search_options = {
                 }
             }
             else{
+                search_options[choice]['in_use'] = true;
                 var right_side_html = search_options[choice]['input_field'];
                 if($(this).data('is_empty')){
                     empty_rows--;
                     $(this).data('is_empty', false);
                 }
             }
+            if(old_value){
+                search_options[old_value]['in_use'] = false;
+
+            }
             var right_side = $(this).parents('fieldset.search_row').find('.right_side')
             right_side.html(right_side_html);
             add_search_row_if_we_need_one();
         });
         dropdown.data('is_empty', true);
+        dropdown.mouseenter(function(){
+            for(key in search_options){
+                if(search_options[key]['in_use']){
+                    $(this).find("option[value='" + key + "']").hide();
+                    
+                }
+                else{
+                    $(this).find("option[value='" + key + "']").show();
+                }
+            }
+        });
         return dropdown
         
     }
@@ -338,10 +472,10 @@ var search_options = {
         }
     }
     function make_search_row_dom_element(){
-        var row = $(' <fieldset class="search_row"> </fieldset> ');
-        var left_side = $(' <fieldset class="left_side"> </fieldset> ');
+        row = $(' <fieldset class="search_row"> </fieldset> ');
+        left_side = $(' <fieldset class="left_side"> </fieldset> ');
         left_side.append(make_left_side_dropdown());
-        var right_side = $(' <fieldset class="right_side"></fieldset> ');
+        right_side = $(' <fieldset class="right_side"></fieldset> ');
         row.append(left_side);
         row.append(right_side);
         return row[0];
@@ -353,13 +487,48 @@ var search_options = {
         row = make_search_row_dom_element();
         get_search_form().find('.rows').append(row);
         empty_rows++;
+        return row;
+    }
+    function do_search(){
+        query_url_base = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
+        the_form = $('#search_form');
+        search_params = the_form.serialize();
+        //search_params = the_form.serializeArray();  //if we wanted to do something fancier
+        query_url = query_url_base + '?' + search_params; 
+        // once the db actually works, uncomment this and make it happen
+        /*
+        $.get(query_url, function(data){
+            show_results(data);
+        });
+        */
+        //until then, just do this:
+        show_results(results);
     }
     //RUN THIS STUFF AT PAGE LOAD
     $().ready(function(){
-        add_search_row_if_we_need_one();
+        for(key in search_options){
+            search_options[key]['in_use'] = false;
+        }
+
+        row1 = insert_search_row_dom_element();
+        row1 = $(row1);
+        /*
+        row2 = insert_search_row_dom_element();
+        row2 = $(row2);
+        */
+
+        row1.find("select option:selected").removeAttr('selected');
+        row1.find("select option[value='time']").attr('selected', 'selected');
+        row1.find("select").change();
+
+        /*
+        row2.find("select option:selected").removeAttr('selected');
+        row2.find("select option[value='dept']").attr('selected', 'selected');
+        row2.find("select").change();
+        */
         //show_favorites();
         $("form#search_form input[type='submit']").click(function(){
-            show_results(results);
+            do_search();
             return false;
             });
     });
@@ -372,8 +541,11 @@ var search_options = {
 
 <div id="header">
 <h1>
-Hacker Club's Course Picker
+Pickr
 </h1>
+<h2>
+by <a href="http://hacktown.cs.dartmouth.edu">hacker club</a>
+</h2>
 </div>
 
 
@@ -381,26 +553,19 @@ Hacker Club's Course Picker
 <div id="content">
 
 <div id="search">
-<h2>
+<h3>
 Search
-</h2>
+</h3>
 
 <form method="" action="" id="search_form">
 <fieldset class="rows">
 </fieldset>
-<input type="submit" value="GO FOR IT"/>
+<input type="submit" value="Search &raquo;"/>
 </form>
 </div>
 
 
-<div id="results">
-
-<h2>
-Results
-</h2>
-
-
-
+<div id="results_container">
 </div>
 
 <!--
