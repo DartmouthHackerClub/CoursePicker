@@ -490,9 +490,13 @@ var search_options = {
         return row;
     }
     function do_search(){
-        /*
+        query_url_base = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
+        the_form = $('#search_form');
+        search_params = the_form.serialize();
+        //search_params = the_form.serializeArray();  //if we wanted to do something fancier
+        query_url = query_url_base + '?' + search_params; 
         // once the db actually works, uncomment this and make it happen
-        query_url = ''; // TODO
+        /*
         $.get(query_url, function(data){
             show_results(data);
         });
