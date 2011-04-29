@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# use curl http://www.dartmouth.edu/~reg/201103_nro.html to get html 
+#
 # scrapes data from NRO webpage
 # takes input from stdin
 # outputs JSON to stdout
@@ -60,4 +62,4 @@ sub parseCourseNumList() {
 
 chop $output; chop $output; # delete extra comma and space on the end
 
-print "{[$output]}\n";
+print "[$output]\n";
