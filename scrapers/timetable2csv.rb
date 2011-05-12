@@ -41,7 +41,3 @@ csv_string = CSV.generate() do |csv| #options={:col_sep => "\t" }
 end
 
 puts csv_string.gsub(/&nbsp/, "")
-<<<<<<< HEAD
-    
-=======
->>>>>>> 03a53513d57918132257bf5e446092985778e7f7
