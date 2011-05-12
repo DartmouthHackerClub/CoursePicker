@@ -109,6 +109,11 @@ fieldset{
     font-size: 1.1em;
 }
 
+.result span{
+    display: block;
+
+}
+
 .result .offering{
     margin-left: 10px;
 }
@@ -247,6 +252,36 @@ function show_results(results){
         result_div = $('<div class="result"></div>');
         dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
         result_div.append(dept_num);
+        //desc = $('<span class="desc">' + result['desc'] + '</span>');
+        //result_div.append(desc);
+        term = $('<span class="term">' + result['term'] + ' ' + result['year'] + '</span>');
+        result_div.append(term);
+        //year = $('<span class="year">' + result['year'] + '</span>');
+        //result_div.append(year);
+        profs_div = $('<span class="profs"></span>');
+        num_profs = 0;
+        for(key in result['Professors']){
+            prof = result['Professors'][key]
+            if(num_profs >0){
+                profs_div.append($(","));
+            }
+            profs_div.append($(prof));
+        }
+        result_div.append(prof);
+        time = $('<span class="time">' + result['period'] + '</span>');
+        result_div.append(time);
+        crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
+        result_div.append(crn);
+        the_results_div.append(result_div);
+        
+
+
+
+    /* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
+        result = results[key];
+        result_div = $('<div class="result"></div>');
+        dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
+        result_div.append(dept_num);
         desc = $('<span class="desc">' + result['desc'] + '</span>');
         result_div.append(desc);
         offerings_div = $('<div class="offerings"><h4>Current Offerings</h4></div>');
@@ -266,6 +301,7 @@ function show_results(results){
             offerings_div.append(offering_div);
         }
         the_results_div.append(result_div);
+    */
     }
 }
 
