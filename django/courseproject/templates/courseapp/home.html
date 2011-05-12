@@ -109,6 +109,11 @@ fieldset{
     font-size: 1.1em;
 }
 
+.result span{
+    display: block;
+
+}
+
 .result .offering{
     margin-left: 10px;
 }
@@ -245,7 +250,37 @@ function show_results(results){
     for(key in results){
         result = results[key];
         result_div = $('<div class="result"></div>');
-        dept_num = $('<span class="dept_num">' + result['dept']+result['number'] + '</span>');
+        dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
+        result_div.append(dept_num);
+        //desc = $('<span class="desc">' + result['desc'] + '</span>');
+        //result_div.append(desc);
+        term = $('<span class="term">' + result['term'] + ' ' + result['year'] + '</span>');
+        result_div.append(term);
+        //year = $('<span class="year">' + result['year'] + '</span>');
+        //result_div.append(year);
+        profs_div = $('<span class="profs"></span>');
+        num_profs = 0;
+        for(key in result['Professors']){
+            prof = result['Professors'][key]
+            if(num_profs >0){
+                profs_div.append($(","));
+            }
+            profs_div.append($(prof));
+        }
+        result_div.append(prof);
+        time = $('<span class="time">' + result['period'] + '</span>');
+        result_div.append(time);
+        crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
+        result_div.append(crn);
+        the_results_div.append(result_div);
+        
+
+
+
+    /* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
+        result = results[key];
+        result_div = $('<div class="result"></div>');
+        dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
         result_div.append(dept_num);
         desc = $('<span class="desc">' + result['desc'] + '</span>');
         result_div.append(desc);
@@ -266,6 +301,7 @@ function show_results(results){
             offerings_div.append(offering_div);
         }
         the_results_div.append(result_div);
+    */
     }
 }
 
@@ -321,7 +357,7 @@ function generate_input_field_time(){
     html += '<span style="font-size: .7em;">';
     for(key in times){
         time = times[key];
-        html+= '<input type="checkbox" name="' + time + '" />' + time;
+        html+= '<input type="checkbox" name="period_' + time + '" value="1"/>' + time;
     }
     html += '</span>';
     return html;
@@ -490,19 +526,54 @@ var search_options = {
         return row;
     }
     function do_search(){
-        query_url_base = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
+        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
         the_form = $('#search_form');
-        search_params = the_form.serialize();
+        form_params = the_form.serializeArray();
+        periods = [];
+        for(key in form_params){
+            if(form_params[key]['name'] == 'criteria'){
+                continue;
+            }
+            else if(form_params[key]['name'].substring(0,7) == 'period_'){
+                if(form_params[key]['value'] == '1'){
+                    periods.push(form_params[key]['name'].substring(7));
+                }
+            }
+        // grab the period param
+        }
+        search_params = {};
+        periods_or = [];
+        for(key in periods){
+            periods_or.push({"term" : {"period" : periods[key]} });
+            //search_params.push('filter': { "or" []});
+        }
+        periods_or = {"or" : periods_or};
+        search_params = {
+            "filtered" : {
+                "match_all" : {},
+                "filter" : periods_or
+            }
+        }
+        console.log(search_params);
+        console.log(periods);
         //search_params = the_form.serializeArray();  //if we wanted to do something fancier
-        query_url = query_url_base + '?' + search_params; 
+        //query_url = query_url_base + '&' + search_params; 
         // once the db actually works, uncomment this and make it happen
-        /*
-        $.get(query_url, function(data){
+        $.get(query_url, search_params, function(data){
+            //we only want the juicy part of the data
+            data = data['hits']['hits'];
+            for(key in data){
+                data[key] = data[key]["_source"];
+                //pull the dept, number, section info out of the "names" field
+                data[key]['Department'] = data[key]["names"][0]["Department"];
+                data[key]['Number'] = data[key]["names"][0]["Number"];
+                data[key]['Section'] = data[key]["names"][0]["Section"];
+            }
+            
             show_results(data);
         });
-        */
         //until then, just do this:
-        show_results(results);
+        //show_results(results);
     }
     //RUN THIS STUFF AT PAGE LOAD
     $().ready(function(){

@@ -10,8 +10,8 @@ csv_string = CSV.generate() do |csv| #options={:col_sep => "\t" }
   # Read only the table
   doc.css('div.data-table').each do |x|
     # This is necessary because of the shitty HTML, else nokogiri doesn't constrain its search
-    table = Nokogiri::HTML(x.to_s) 
-    
+    table = Nokogiri::HTML(x.to_s)
+
     # Read the header row in and count how many columns
     columns = 0
     header = []
@@ -19,9 +19,9 @@ csv_string = CSV.generate() do |csv| #options={:col_sep => "\t" }
       header << cell.content
       columns += 1
     end
-  
+
     csv << header
-    
+
     # Read column number of rows and add then as a column
     cells_read = 0
     row = []
@@ -34,11 +34,14 @@ csv_string = CSV.generate() do |csv| #options={:col_sep => "\t" }
         row = []
       end
     end
-    
-    
+
+
   end
-  
+
 end
 
 puts csv_string.gsub(/&nbsp/, "")
+<<<<<<< HEAD
     
+=======
+>>>>>>> 03a53513d57918132257bf5e446092985778e7f7
