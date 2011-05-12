@@ -357,7 +357,7 @@ function generate_input_field_time(){
     html += '<span style="font-size: .7em;">';
     for(key in times){
         time = times[key];
-        html+= '<input type="checkbox" name="' + time + '" />' + time;
+        html+= '<input type="checkbox" name="period_' + time + '" value="1"/>' + time;
     }
     html += '</span>';
     return html;
@@ -526,13 +526,40 @@ var search_options = {
         return row;
     }
     function do_search(){
-        query_url_base = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search?size=9000';
+        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
         the_form = $('#search_form');
-        search_params = the_form.serialize();
+        form_params = the_form.serializeArray();
+        periods = [];
+        for(key in form_params){
+            if(form_params[key]['name'] == 'criteria'){
+                continue;
+            }
+            else if(form_params[key]['name'].substring(0,7) == 'period_'){
+                if(form_params[key]['value'] == '1'){
+                    periods.push(form_params[key]['name'].substring(7));
+                }
+            }
+        // grab the period param
+        }
+        search_params = {};
+        periods_or = [];
+        for(key in periods){
+            periods_or.push({"term" : {"period" : periods[key]} });
+            //search_params.push('filter': { "or" []});
+        }
+        periods_or = {"or" : periods_or};
+        search_params = {
+            "filtered" : {
+                "match_all" : {},
+                "filter" : periods_or
+            }
+        }
+        console.log(search_params);
+        console.log(periods);
         //search_params = the_form.serializeArray();  //if we wanted to do something fancier
-        query_url = query_url_base + '&' + search_params; 
+        //query_url = query_url_base + '&' + search_params; 
         // once the db actually works, uncomment this and make it happen
-        $.get(query_url, function(data){
+        $.get(query_url, search_params, function(data){
             //we only want the juicy part of the data
             data = data['hits']['hits'];
             for(key in data){
@@ -543,7 +570,6 @@ var search_options = {
                 data[key]['Section'] = data[key]["names"][0]["Section"];
             }
             
-            console.log(data);
             show_results(data);
         });
         //until then, just do this:
