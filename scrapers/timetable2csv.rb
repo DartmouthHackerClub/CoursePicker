@@ -1,7 +1,9 @@
-require 'csv'
+require 'rubygems'
 require 'nokogiri'
+  require "faster_csv"
+  CSV = FCSV
 
-csv_string = CSV.generate do |csv|
+csv_string = CSV.generate() do |csv| #options={:col_sep => "\t" }
 
   doc = Nokogiri::HTML(ARGF.read)
 
