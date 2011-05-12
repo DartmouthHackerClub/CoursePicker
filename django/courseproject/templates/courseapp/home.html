@@ -245,7 +245,7 @@ function show_results(results){
     for(key in results){
         result = results[key];
         result_div = $('<div class="result"></div>');
-        dept_num = $('<span class="dept_num">' + result['dept']+result['number'] + '</span>');
+        dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
         result_div.append(dept_num);
         desc = $('<span class="desc">' + result['desc'] + '</span>');
         result_div.append(desc);
@@ -490,19 +490,28 @@ var search_options = {
         return row;
     }
     function do_search(){
-        query_url_base = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
+        query_url_base = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search?size=9000';
         the_form = $('#search_form');
         search_params = the_form.serialize();
         //search_params = the_form.serializeArray();  //if we wanted to do something fancier
-        query_url = query_url_base + '?' + search_params; 
+        query_url = query_url_base + '&' + search_params; 
         // once the db actually works, uncomment this and make it happen
-        /*
         $.get(query_url, function(data){
+            //we only want the juicy part of the data
+            data = data['hits']['hits'];
+            for(key in data){
+                data[key] = data[key]["_source"];
+                //pull the dept, number, section info out of the "names" field
+                data[key]['Department'] = data[key]["names"][0]["Department"];
+                data[key]['Number'] = data[key]["names"][0]["Number"];
+                data[key]['Section'] = data[key]["names"][0]["Section"];
+            }
+            
+            console.log(data);
             show_results(data);
         });
-        */
         //until then, just do this:
-        show_results(results);
+        //show_results(results);
     }
     //RUN THIS STUFF AT PAGE LOAD
     $().ready(function(){
