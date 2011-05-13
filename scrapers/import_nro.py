@@ -5,17 +5,53 @@
 import couchdb
 import sys
 import json
+import course
+from couchdb.schema import Document
 
 couch = couchdb.Server()
 
-if 'nro' in couch:
-    del couch['nro']
-db = couch.create('nro')
-
 nro_data = json.loads(sys.stdin.readline())
 
-print nro_data
+courses = couch['courses']
 
-print 'Populating NRO records'
+# only need to run this once
+#for course_id in courses:
+#    course = courses[course_id]
+#    course['nro'] = 'true'
+#    courses[course_id] = course
 
-db.update(nro_data)
+def dept_query(dept):
+    return "function(doc) {\
+    for (var i in doc.names)\
+        if (doc.names[i].Department == '%s')\
+          emit(doc._id, doc);}" % dept
+
+def course_query(dept, num):
+    return "function(doc) {\
+    for (var i in doc.names)\
+        if (doc.names[i].Department == '%s' && doc.names[i].Number == '%03d')\
+          emit(doc._id, doc);}" % (dept, num)
+
+
+for no_nro in nro_data:
+    dept = no_nro['department']
+    nums = no_nro['courses']
+#    print dept, nums
+    if nums == 'all':
+        query_func = dept_query(dept)
+#        print query_func
+        for row in courses.query(query_func):
+#            print row.key, row.value
+            row.value['nro'] = 'false'
+            courses[row.key] = row.value
+#            print courses[row.key]
+        
+    else:
+        for num in nums:
+            query_func = course_query(dept, num)
+#            print query_func
+            for row in courses.query(query_func):
+#                print row.key, row.value
+                row.value['nro'] = 'false'
+                courses[row.key] = row.value
+#                print courses[row.key]
