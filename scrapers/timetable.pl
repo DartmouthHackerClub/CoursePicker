@@ -3,6 +3,10 @@ use JSON;
 use Memoize;
 use strict;
 use Switch;
+use Text::CSV;
+my $stdin = *STDIN;
+ my $csv = Text::CSV->new ( { binary => 1 } )  # should set binary attribute.
+                 or die "Cannot use CSV: ".Text::CSV->error_diag ();
 #use CouchDB::Client;
 #my $dbserver = shift @ARGV;
 #my $dbname = shift @ARGV;
@@ -20,14 +24,13 @@ my @courses;
 #For CouchDB
 my $updatetime = time();
 my $formatrev = 1;  # The major revision
-while(<STDIN>){ # Read courses
-    chomp; 
+while(my $_  = $csv->getline($stdin) ){ # Read courses
+    next unless defined; # Detect EOF
+    my @coursedata = @{$_};
     my %course = ();
-    my @coursedata = split(/\t/);
-    for  (@coursedata){ # Replace the single tab in empty fields with nothing
-	chomp;
-    }
-    my ($term,$CRN,$deptcode,$num,$section,$fys,$title,$xlist_string,$period,$room,$building,$profs_string,$wc,$dist,$lim,$enroll) = @coursedata;
+    my ($term,$CRN,$deptcode,$num,$section,$title,$xlist_string,$period,$room,$building,$profs_string,$wc,$dist,$lim,$enroll) = @coursedata;
+    my $fys = "N"; # TODO: Re-add first year seminars
+    # my $CRN = "$term-$deptcode-$num-$section";
     next if $whatsubject{"$deptcode $num $section $term"};
     $course{'CRN'} = $CRN;
     $course{'title'} = $title;
