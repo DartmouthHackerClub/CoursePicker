@@ -167,6 +167,10 @@ function generate_input_field_time() {
         time = times[key];
         html += '<input type="checkbox" name="period_' + time + '" value="1" />' + time;
     }
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_all">(All)</a>';
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_none">(None)</a>';
     html += '</span>';
     return html;
 }
@@ -179,6 +183,10 @@ function generate_input_field_distrib() {
         distrib = distribs[key];
         html += '<input type="checkbox" name="distrib_' + distrib + '" value="1" />' + distrib;
     }
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_all">(All)</a>';
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_none">(None)</a>';
     html += '</span>';
     return html;
 }
@@ -297,6 +305,12 @@ function add_search_row_if_we_need_one() {
     while (empty_rows <= 0) {
         insert_search_row_dom_element();
     }
+    $(".check_all").click(function () {
+        $(this).parent().children("input").attr('checked', 'checked');
+    });
+    $(".check_none").click(function () {
+        $(this).parent().children("input").attr('checked', '');
+    });
 }
 
 function make_search_row_dom_element() {
