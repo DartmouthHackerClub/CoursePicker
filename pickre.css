@@ -1,0 +1,132 @@
+html{
+    width: 100%;
+/*    background-color: gray;
+*/
+}
+body{
+    width: 700px;
+    margin: auto;
+    background-color: white;
+    font-family: arial;
+    font-size: 14px;
+    color: #4d4d4d;
+}
+
+#header{
+/*
+    background-color: red;
+*/
+}
+
+#header h1{
+    text-align: right;
+    font-size: 4em;
+    color: #666666;
+    margin: 0;
+    padding: 0;
+}
+#header h2{
+    text-align: right;
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    color: #666666;
+}
+
+#content{
+    padding: 20px;
+}
+
+fieldset{
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+#search_form{
+    border-radius: 10px;
+    -border-radius: 10px;
+    -moz-border-radius: 10px;
+    font-size: 1.2em;
+    text-align: right;
+    background-color: #ededed;
+    padding: 20px;
+}
+
+#search_form input[type='submit']{
+    display: inline-block;
+    font-size: 1.2em;
+}
+
+.search_row{
+    text-align: left;
+    height: 50px;
+}
+
+.search_row .left_side{
+    width: 300px;
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+.search_row .left_side select{
+    width: 100%;
+}
+
+.search_row .right_side{
+    height: 100%;
+    vertical-align: middle;
+    width: 300px;
+    display: inline-block;
+    padding: 0 10px 0 10px;
+}
+.search_row .right_side input[type='text']{
+    width: 100%;
+}
+
+.criteria{
+}
+
+.result{
+    width: 100%;
+    margin-bottom: 20px;
+}
+.result .dept_num{
+    display: block;
+    width: 100%;
+    font-size: 1.3em;
+}
+.result .desc{
+    display: block;
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.result span{
+    display: block;
+
+}
+
+.result .offering{
+    margin-left: 10px;
+}
+.result .offering .prof{
+    margin-left: 5px;
+}
+
+.result .offering .time{
+    margin-left: 5px;
+}
+.result .offering .term{
+}
+.result .offering .crn{
+    margin-left: 5px;
+}
+
+h3{
+    font-size: 2em;
+    margin: 0;
+    padding: 0;
+
+}

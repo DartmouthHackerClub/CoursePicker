@@ -285,20 +285,19 @@ function do_search() {
             });
         }
     }
-    if (periods.length > 0) {
-    	i = {
+    if (periods.length() > 0) {
+        queries.push({
             "terms": {
                 "period": periods,
                 "minimum_match": 1
             }
-       };
-        queries.push(i);
+        });
     }
     search_params = {
         "size": 9000,
         "query": {
             "bool": {
-                "must": queries
+                "must": query
             }
         }
     };
@@ -310,7 +309,6 @@ function do_search() {
         success: function (data) {
             //we only want the juicy part of the data
             console.log(JSON.stringify(data));
-            console.log(JSON.stringify(search_params));
             data = data['hits']['hits'];
             for (key in data) {
                 data[key] = data[key]["_source"];
@@ -353,11 +351,8 @@ row2.find("select").change();
 */
     //show_favorites();
     $("form#search_form input[type='submit']").click(function () {
-    	try{
-        	do_search();
-        }catch(e){
-        	alert(e.message)
-        }
+
+        do_search();
         return false;
     });
 });	</script>
