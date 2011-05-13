@@ -77,6 +77,20 @@ function show_results(results) {
         result_div.append(time);
         crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
         result_div.append(crn);
+        if(result['dist']){
+            distrib = $('<span class="distrib">Distrib:' + result['dist'] + '</span>');
+        }
+        else{
+            distrib = $('<span class="distrib">No Distribs</span>');
+        }
+        result_div.append(distrib);
+        if(result['wc']){
+            wcult = $('<span class="wcult">WCULT:' + result['wc'] + '</span>');
+        }
+        else{
+            wcult = $('<span class="wcult">No WCULT</span>');
+        }
+        result_div.append(wcult);
         the_results_div.append(result_div);
 
 /* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
