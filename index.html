@@ -1,6 +1,6 @@
 <html>
 <head>
-<title></title>
+<title>Pickr, by Hacker Club</title>
 
 
 <style type="text/css">
@@ -491,9 +491,9 @@ var search_options = {
             "size" : 9000,
             "query" : periods_query,
         };
+        console.log(JSON.stringify(search_params));
         $.ajax({dataType: "json", type: "POST", url : query_url, data : JSON.stringify(search_params), success : function(data){
             //we only want the juicy part of the data
-            console.log(JSON.stringify(data));
             data = data['hits']['hits'];
             for(key in data){
                 data[key] = data[key]["_source"];
