@@ -397,20 +397,18 @@ $().ready(function () {
 
     row1 = insert_search_row_dom_element();
     row1 = $(row1);
-/*
-row2 = insert_search_row_dom_element();
-row2 = $(row2);
-*/
+
+    row2 = insert_search_row_dom_element();
+    row2 = $(row2);
 
     row1.find("select option:selected").removeAttr('selected');
-    row1.find("select option[value='time']").attr('selected', 'selected');
+    row1.find("select option[value='term']").attr('selected', 'selected');
     row1.find("select").change();
 
-/*
-row2.find("select option:selected").removeAttr('selected');
-row2.find("select option[value='Department']").attr('selected', 'selected');
-row2.find("select").change();
-*/
+    row2.find("select option:selected").removeAttr('selected');
+    row2.find("select option[value='time']").attr('selected', 'selected');
+    row2.find("select").change();
+
     //show_favorites();
     $("form#search_form input[type='submit']").click(function () {
     	try{
