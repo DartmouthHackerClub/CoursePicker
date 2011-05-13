@@ -343,9 +343,8 @@ function do_search() {
     }
     if (periods.length > 0) {
     	i = {
-            "terms": {
-                "period": periods,
-                "minimum_match": 1
+            "field": {
+                "period": periods.join(' ')
             }
        };
         queries.push(i);
