@@ -471,7 +471,7 @@ var search_options = {
         return row;
     }
     function do_search(){
-        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search?size=9000';
+        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
         the_form = $('#search_form');
         form_params = the_form.serializeArray();
         periods = [];
@@ -491,12 +491,6 @@ var search_options = {
             "size" : 9000,
             "query" : periods_query,
         };
-        console.log(search_params);
-        console.log(periods);
-        //search_params = the_form.serializeArray();  //if we wanted to do something fancier
-        //query_url = query_url_base + '&' + search_params; 
-        // once the db actually works, uncomment this and make it happen
-        console.log(JSON.stringify(search_params));
         $.ajax({dataType: "json", type: "POST", url : query_url, data : JSON.stringify(search_params), success : function(data){
             //we only want the juicy part of the data
             console.log(JSON.stringify(data));
@@ -510,7 +504,8 @@ var search_options = {
             }
             
             show_results(data);
-        }});
+        },
+        error: function(e) {alert(JSON.stringify(e))}});
         //until then, just do this:
         //show_results(results);
     }
