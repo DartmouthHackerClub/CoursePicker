@@ -8,6 +8,45 @@
 		-->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 		<script type="text/javascript" >
+/*
+FOR LATER....
+var favorites = {
+    0 : {
+        'dept' : 'COSC',
+        'number' : '005',
+        'time' : '10',
+        'title' : 'Intro Computer Science',
+        'quarter' : '11F',
+        'prof' : 'Balkcom',
+        },
+};
+
+function show_favorites(){
+    show_in_here = $('#favorites');
+    favorites_dom_elem = $('<span></span>');
+    for(var key in favorites){
+        favorite = favorites[key];
+        favorite_li = $("<li>hi</li>");
+        timeslot_div = get_or_create_favorite_timeslot_div(favorite['timeslot']);
+        timeslot_div.append(favorite_li);
+    }
+    show_in_here.append(favorites_dom_elem);
+}
+
+function get_or_create_favorite_timeslot_div(timeslot){
+    class = 'favorite_timeslot_div_' + timeslot
+    existing_div = $('.' + class);
+    if(existing_div){
+        return existing_div;
+    }
+    else{
+        new_div = $('<div></div>');
+        new_div.attr('class', class);
+        $('#favorites').append();
+    }
+}
+*/
+
 var empty_rows = 0;
 
 function show_results(results) {
@@ -38,6 +77,20 @@ function show_results(results) {
         result_div.append(time);
         crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
         result_div.append(crn);
+        if(result['dist'] && result['dist'].length > 0){
+            distrib = $('<span class="distrib">Distrib:' + result['dist'] + '</span>');
+        }
+        else{
+            distrib = $('<span class="distrib">No Distribs</span>');
+        }
+        result_div.append(distrib);
+        if(result['wc']){
+            wcult = $('<span class="wcult">WCULT:' + result['wc'] + '</span>');
+        }
+        else{
+            wcult = $('<span class="wcult">No WCULT</span>');
+        }
+        result_div.append(wcult);
         the_results_div.append(result_div);
 
 /* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
@@ -104,7 +157,7 @@ function generate_input_field_time() {
     html += '<span style="font-size: .7em;">';
     for (key in times) {
         time = times[key];
-        html += '<input type="checkbox" name="period_' + time + '" value="1"/>' + time;
+        html += '<input type="checkbox" name="period_' + time + '" value="1" />' + time;
     }
     html += '</span>';
     return html;
@@ -116,7 +169,7 @@ function generate_input_field_distrib() {
     html += '<span style="font-size: .7em;">';
     for (key in distribs) {
         distrib = distribs[key];
-        html += '<input type="checkbox" name="dist_' + distrib + '" value="1"/>' + distrib;
+        html += '<input type="checkbox" name="distrib_' + distrib + '" value="1" />' + distrib;
     }
     html += '</span>';
     return html;
@@ -264,7 +317,8 @@ function do_search() {
     the_form = $('#search_form');
     form_params = the_form.serializeArray();
     periods = [];
-    dists=[];
+    distribs = [];
+
     queries = [];
     for (key in form_params) {
         if (form_params[key]['name'] == 'criteria') {
@@ -274,10 +328,10 @@ function do_search() {
             if (form_params[key]['value'] == '1') {
                 periods.push(form_params[key]['name'].substring(7));
             }
-        } else if (form_params[key]['name'].substring(0, 5) == 'dist_') {
-            // grab the period param
+        } else if (form_params[key]['name'].substring(0, 8) == 'distrib_') {
+            // grab the distrib param
             if (form_params[key]['value'] == '1') {
-                dists.push(form_params[key]['name'].substring(5));
+                distribs.push(form_params[key]['name'].substring(8));
             }
         }  else {
             i = {}; //hash needs to be built at runtime
@@ -295,6 +349,16 @@ function do_search() {
     	i = {
             "terms": {
                 "period": periods,
+                "minimum_match": 1
+            }
+       };
+        queries.push(i);
+    }
+    if (distribs.length > 0) {
+        console.log(distribs);
+    	i = {
+            "terms": {
+                "dist": distribs,
                 "minimum_match": 1
             }
        };
