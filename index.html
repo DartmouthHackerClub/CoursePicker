@@ -341,8 +341,8 @@ function do_search() {
             });
         }
     }
-    if(dists.length > 0){
-         i = { "terms" : { "dist" : dists, "minimum_match" : 1}};
+    if(distribs.length > 0){
+         i = { "terms" : { "dist" : distribs, "minimum_match" : 1}};
          queries.push(i);
     } 
     if (periods.length > 0) {
