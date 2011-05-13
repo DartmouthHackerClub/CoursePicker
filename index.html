@@ -1,200 +1,23 @@
 <html>
-<head>
-<title></title>
+	<head>
+		<title></title>
+		<link rel="stylesheet" type="text/css"  href="pickre.css" />
 
-
-<style type="text/css">
-html{
-    width: 100%;
-/*    background-color: gray;
-*/
-}
-body{
-    width: 700px;
-    margin: auto;
-    background-color: white;
-    font-family: arial;
-    font-size: 14px;
-    color: #4d4d4d;
-}
-
-#header{
-/*
-    background-color: red;
-*/
-}
-
-#header h1{
-    text-align: right;
-    font-size: 4em;
-    color: #666666;
-    margin: 0;
-    padding: 0;
-}
-#header h2{
-    text-align: right;
-    font-size: 1.5em;
-    margin: 0;
-    padding: 0;
-    color: #666666;
-}
-
-#content{
-    padding: 20px;
-}
-
-fieldset{
-    margin: 0;
-    padding: 0;
-    background: none;
-    border: none;
-}
-
-#search_form{
-    border-radius: 10px;
-    -border-radius: 10px;
-    -moz-border-radius: 10px;
-    font-size: 1.2em;
-    text-align: right;
-    background-color: #ededed;
-    padding: 20px;
-}
-
-#search_form input[type='submit']{
-    display: inline-block;
-    font-size: 1.2em;
-}
-
-.search_row{
-    text-align: left;
-    height: 50px;
-}
-
-.search_row .left_side{
-    width: 300px;
-    display: inline-block;
-    vertical-align: middle;
-    height: 100%;
-}
-.search_row .left_side select{
-    width: 100%;
-}
-
-.search_row .right_side{
-    height: 100%;
-    vertical-align: middle;
-    width: 300px;
-    display: inline-block;
-    padding: 0 10px 0 10px;
-}
-.search_row .right_side input[type='text']{
-    width: 100%;
-}
-
-.criteria{
-}
-
-.result{
-    width: 100%;
-    margin-bottom: 20px;
-}
-.result .dept_num{
-    display: block;
-    width: 100%;
-    font-size: 1.3em;
-}
-.result .desc{
-    display: block;
-    width: 100%;
-    font-size: 1.1em;
-}
-
-.result span{
-    display: block;
-
-}
-
-.result .offering{
-    margin-left: 10px;
-}
-.result .offering .prof{
-    margin-left: 5px;
-}
-
-.result .offering .time{
-    margin-left: 5px;
-}
-.result .offering .term{
-}
-.result .offering .crn{
-    margin-left: 5px;
-}
-
-h3{
-    font-size: 2em;
-    margin: 0;
-    padding: 0;
-
-}
-
-
-</style>
-
-<!--
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
--->
-<script type="text/javascript" src="jquery-1.5.2.min.js"></script>
-
-<script type="text/javascript">
-
-/*
-FOR LATER....
-var favorites = {
-    0 : {
-        'dept' : 'COSC',
-        'number' : '005',
-        'time' : '10',
-        'title' : 'Intro Computer Science',
-        'quarter' : '11F',
-        'prof' : 'Balkcom',
-        },
-};
-
-function show_favorites(){
-    show_in_here = $('#favorites');
-    favorites_dom_elem = $('<span></span>');
-    for(var key in favorites){
-        favorite = favorites[key];
-        favorite_li = $("<li>hi</li>");
-        timeslot_div = get_or_create_favorite_timeslot_div(favorite['timeslot']);
-        timeslot_div.append(favorite_li);
-    }
-    show_in_here.append(favorites_dom_elem);
-}
-
-function get_or_create_favorite_timeslot_div(timeslot){
-    class = 'favorite_timeslot_div_' + timeslot
-    existing_div = $('.' + class);
-    if(existing_div){
-        return existing_div;
-    }
-    else{
-        new_div = $('<div></div>');
-        new_div.attr('class', class);
-        $('#favorites').append();
-    }
-}
-*/
+		<!--
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+		-->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+		<script type="text/javascript" >
 
 var empty_rows = 0;
 
-function show_results(results){
+function show_results(results) {
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
-    for(key in results){
+    for (key in results) {
         result = results[key];
         result_div = $('<div class="result"></div>');
-        dept_num = $('<span class="dept_num_title">' + result['Department']+result['Number'] + ': ' + result['title'] + '</span>');
+        dept_num = $('<span class="dept_num_title">' + result['Department'] + result['Number'] + ': ' + result['title'] + '</span>');
         result_div.append(dept_num);
         //desc = $('<span class="desc">' + result['desc'] + '</span>');
         //result_div.append(desc);
@@ -204,9 +27,9 @@ function show_results(results){
         //result_div.append(year);
         profs_div = $('<span class="profs"></span>');
         num_profs = 0;
-        for(key in result['Professors']){
+        for (key in result['Professors']) {
             prof = result['Professors'][key]
-            if(num_profs >0){
+            if (num_profs > 0) {
                 profs_div.append($(","));
             }
             profs_div.append($(prof));
@@ -216,377 +39,400 @@ function show_results(results){
         result_div.append(time);
         crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
         result_div.append(crn);
-        the_results_div.append(result_div);
-        
-
-
-
-    /* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
-        result = results[key];
-        result_div = $('<div class="result"></div>');
-        dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
-        result_div.append(dept_num);
-        desc = $('<span class="desc">' + result['desc'] + '</span>');
-        result_div.append(desc);
-        offerings_div = $('<div class="offerings"><h4>Current Offerings</h4></div>');
-        result_div.append(offerings_div);
-        for(key in result['current_offerings']){
-            offering = result['current_offerings'][key];
-            offering_div = $('<div class="offering"></div>');
-
-            term = $('<span class="term">' + offering['term'] + '</span>');
-            offering_div.append(term);
-            prof = $('<span class="prof">' + offering['prof'] + '</span>');
-            offering_div.append(prof);
-            time = $('<span class="time">' + offering['time'] + '</span>');
-            offering_div.append(time);
-            crn = $('<span class="crn">CRN:' + offering['crn'] + '</span>');
-            offering_div.append(crn);
-            offerings_div.append(offering_div);
+        if(result['dist'] && result['dist'].length > 0){
+            distrib = $('<span class="distrib">Distrib:' + result['dist'] + '</span>');
         }
+        else{
+            distrib = $('<span class="distrib">No Distribs</span>');
+        }
+        result_div.append(distrib);
+        if(result['wc']){
+            wcult = $('<span class="wcult">WCULT:' + result['wc'] + '</span>');
+        }
+        else{
+            wcult = $('<span class="wcult">No WCULT</span>');
+        }
+        result_div.append(wcult);
         the_results_div.append(result_div);
-    */
+
+/* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
+result = results[key];
+result_div = $('<div class="result"></div>');
+dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
+result_div.append(dept_num);
+desc = $('<span class="desc">' + result['desc'] + '</span>');
+result_div.append(desc);
+offerings_div = $('<div class="offerings"><h4>Current Offerings</h4></div>');
+result_div.append(offerings_div);
+for(key in result['current_offerings']){
+offering = result['current_offerings'][key];
+offering_div = $('<div class="offering"></div>');
+
+term = $('<span class="term">' + offering['term'] + '</span>');
+offering_div.append(term);
+Professors = $('<span class="Professors">' + offering['Professors'] + '</span>');
+offering_div.append(Professors);
+time = $('<span class="time">' + offering['time'] + '</span>');
+offering_div.append(time);
+crn = $('<span class="crn">CRN:' + offering['crn'] + '</span>');
+offering_div.append(crn);
+offerings_div.append(offering_div);
+}
+the_results_div.append(result_div);
+*/
     }
 }
 
-function get_or_create_results_div(){
+function get_or_create_results_div() {
     results_div = $('#results');
-    if(results_div.length < 1){
+    if (results_div.length < 1) {
         results_div = $('\
-            <div id="results"> \
-            <h3> \
-            Results \
-            </h3> \
-            <div id="the_results"> \
-            </div> \
-            ');
+<div id="results"> \
+<h3> \
+Results \
+</h3> \
+<div id="the_results"> \
+</div> \
+');
     }
     $('#results_container').append(results_div);
     return results_div;
 }
 
-function generate_input_field_quarter(){
-    quarters = [
-        '11X',
-        '11F',
-        '12W',
-        '12S',
-        '12X',
-        ];
-    html = '';
-    html += '<select name="quarter">';
-    for(key in quarters){
+function generate_input_field_quarter() {
+    quarters = ['Fall', 'Winter', 'Spring', 'Summer'];
+    date = new Date();
+    this_year = date.getFullYear();
+    years = [this_year, this_year+1]
+    var html = '';
+    html += '<select name="term">';
+    for (key in quarters) {
         quarter = quarters[key];
-        html+= '<option value="' + quarter + '">' + quarter + '</option>';
+        html += '<option value="' + quarter + '">' + quarter + '</option>';
     }
     html += '</select>';
+    html += '<select name="year">';
+    for (key in years) {
+        year = years[key];
+        html += '<option value="' + year+ '">' + year+ '</option>';
+    }
+    html += '</select>';
+    //html += '<input name="year" id="year" type="text" size="5" value="' +date.getFullYear() + '">';
     return html;
 }
 
-function generate_input_field_time(){
-    times = [
-        '8',
-        '9',
-        '9L',
-        '9S',
-        '10',
-        '11',
-        '12',
-        '2',
-        '10A',
-        '2A',
-        '3A',
-        '3B',
-        ];
+function generate_input_field_time() {
+    times = ['8', '9', '9L', '9S', '10', '11', '12', '2', '10A', '2A', '3A', '3B', ];
     html = '';
     html += '<span style="font-size: .7em;">';
-    for(key in times){
+    for (key in times) {
         time = times[key];
-        html+= '<input type="checkbox" name="period_' + time + '" value="1"/>' + time;
+        html += '<input type="checkbox" name="period_' + time + '" value="1" />' + time;
     }
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_all">(All)</a>';
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_none">(None)</a>';
     html += '</span>';
     return html;
 }
 
-function generate_input_field_distrib(){
-    distribs = [
-        'ART',
-        'LIT',
-        'TMV',
-        'INT',
-        'SOC',
-        'QDS',
-        'SCI',
-        'SLA',
-        'TAS',
-        'TLA',
-        ];
+function generate_input_field_distrib() {
+    distribs = ['ART', 'LIT', 'TMV', 'INT', 'SOC', 'QDS', 'SCI', 'SLA', 'TAS', 'TLA', ];
     html = '';
     html += '<span style="font-size: .7em;">';
-    for(key in distribs){
+    for (key in distribs) {
         distrib = distribs[key];
-        html+= '<input type="checkbox" name="' + distrib + '" />' + distrib;
+        html += '<input type="checkbox" name="distrib_' + distrib + '" value="1" />' + distrib;
     }
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_all">(All)</a>';
+    html += '&nbsp;&nbsp;&nbsp;';
+    html += '<a href="#" class="check_none">(None)</a>';
     html += '</span>';
     return html;
 }
-
 
 var search_options = {
-    'prof':  {
-        'long_name' : 'Professor',
-        'input_field' : '<input type="text" name="prof" id="prof" value=""/>',
-        },
-    'title':  {
-        'long_name' : 'Title',
-        'input_field' : '<input type="text" name="title" id="title" value=""/>',
-        },
-    'dept':  {
-        'long_name' : 'Department',
-        'input_field' : '<input type="text" name="dept" id="dept" value=""/>',
-        },
-    'time':  {
-        'long_name' : 'Meeting Time',
-        'input_field' : generate_input_field_time(),
-        },
-    'quarter':  {
-        'long_name' : 'Quarter',
-        'input_field' : generate_input_field_quarter(),
-        },
-    'distrib':  {
-        'long_name' : 'Distrib',
-        'input_field' : generate_input_field_distrib(),
-        },
-    'wcult':  {
-        'long_name' : 'World Culture',
-        'input_field' : '\
-            <input type="checkbox" name="wcult_w" value="1"/>W \
-            <input type="checkbox" name="wcult_nw" value="1"/>NW \
-            <input type="checkbox" name="wcult_ci" value="1"/>CI \
-            ',
-        },
-    'median_grade':  {
-        'long_name' : 'Median Grade',
-        'input_field' : ' \
-            <select name="median_grade" > \
-                <option value=">=A">A</option> \
-                <option value=">=A-">A- or higher</option> \
-                <option value=">=B+">B+ or higher</option> \
-                <option value=">=B">B or higher</option> \
-                <option value=">=B-">B- or higher</option> \
-            </select> \
-            ',
-        },
-    'NRO':  {
-        'long_name' : 'Can NRO?',
-        'input_field' : '<input type="checkbox" checked="checked"/>Heck Yeah',
-        },
-    /*
-    'enrollment_cap':  {
-        'long_name' : 'Enrollment Cap',
-        'input_field' : '<input type="text" name="" id="" value="" />',
-        },
-    */
-    'space_left':  {
-        'long_name' : 'Space Left?',
-        'input_field' : '<input type="checkbox" checked="checked" />Heck Yeah',
-        },
+    'Professors': {
+        'long_name': 'Professor',
+        'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
+    },
+    'title': {
+        'long_name': 'Title',
+        'input_field': '<input type="text" name="title" id="title" value=""/>',
+    },
+    'Names': {
+        'long_name': 'Department',
+        'input_field': '<input type="text" name="Department" id="dept" value=""/>',
+    },
+    'time': {
+        'long_name': 'Meeting Time',
+        'input_field': generate_input_field_time(),
+    },
+    'term': {
+        'long_name': 'Quarter',
+        'input_field': generate_input_field_quarter(),
+    },
+    'dist': {
+        'long_name': 'Distrib',
+        'input_field': generate_input_field_distrib(),
+    },
+    'wc': {
+        'long_name': 'World Culture',
+        'input_field': '\
+<select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>',
+    },
+    'median_grade': {
+        'long_name': 'Median Grade',
+        'input_field': ' \
+<select name="median_grade" > \
+<option value=">=A">A</option> \
+<option value=">=A-">A- or higher</option> \
+<option value=">=B+">B+ or higher</option> \
+<option value=">=B">B or higher</option> \
+<option value=">=B-">B- or higher</option> \
+</select> \
+',
+    },
+    'NRO': {
+        'long_name': 'Can NRO?',
+        'input_field': '<input type="checkbox" checked="checked"/>Heck Yeah',
+    },
+/*
+'enrollment_cap':  {
+'long_name' : 'Enrollment Cap',
+'input_field' : '<input type="text" name="" id="" value="" />',
+},
+*/
+    'space_left': {
+        'long_name': 'Space Left?',
+        'input_field': '<input type="checkbox" checked="checked" />Heck Yeah',
+    },
+};
+
+function make_left_side_dropdown() {
+    var dropdown = $('<select name="criteria"></select>');
+    var first_option = $('<option value="null">---Choose Criteria---</option>');
+    dropdown.append(first_option);
+    for (var key in search_options) {
+        var settings = search_options[key];
+        var option_tag = $('<option></option>');
+        option_tag.attr('value', key);
+        option_tag.html(settings['long_name']);
+        dropdown.append(option_tag);
+    }
+    dropdown.change(function () {
+        choice = $(this).val();
+        old_value = dropdown.data('old_value');
+        dropdown.data('old_value', choice);
+        if (choice == 'null') {
+            var right_side_html = '';
+            if (!$(this).data('is_empty')) {
+                empty_rows++;
+                $(this).data('is_empty', true);
+            }
+        } else {
+            search_options[choice]['in_use'] = true;
+            var right_side_html = search_options[choice]['input_field'];
+            if ($(this).data('is_empty')) {
+                empty_rows--;
+                $(this).data('is_empty', false);
+            }
+        }
+        if (old_value) {
+            search_options[old_value]['in_use'] = false;
+
+        }
+        var right_side = $(this).parents('fieldset.search_row').find('.right_side')
+        right_side.html(right_side_html);
+        add_search_row_if_we_need_one();
+    });
+    dropdown.data('is_empty', true);
+    dropdown.mouseenter(function () {
+        for (key in search_options) {
+            if (search_options[key]['in_use']) {
+                $(this).find("option[value='" + key + "']").hide();
+
+            } else {
+                $(this).find("option[value='" + key + "']").show();
+            }
+        }
+    });
+    return dropdown
+
+}
+
+function add_search_row_if_we_need_one() {
+    while (empty_rows <= 0) {
+        insert_search_row_dom_element();
+    }
+    $(".check_all").click(function () {
+        $(this).parent().children("input").attr('checked', 'checked');
+    });
+    $(".check_none").click(function () {
+        $(this).parent().children("input").attr('checked', '');
+    });
+}
+
+function make_search_row_dom_element() {
+    row = $(' <fieldset class="search_row"> </fieldset> ');
+    left_side = $(' <fieldset class="left_side"> </fieldset> ');
+    left_side.append(make_left_side_dropdown());
+    right_side = $(' <fieldset class="right_side"></fieldset> ');
+    row.append(left_side);
+    row.append(right_side);
+    return row[0];
+}
+
+function get_search_form() {
+    return $('#search_form');
+}
+
+function insert_search_row_dom_element() {
+    row = make_search_row_dom_element();
+    get_search_form().find('.rows').append(row);
+    empty_rows++;
+    return row;
+}
+
+function do_search() {
+    query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
+    the_form = $('#search_form');
+    form_params = the_form.serializeArray();
+    periods = [];
+    distribs = [];
+
+    queries = [];
+    for (key in form_params) {
+        if (form_params[key]['name'] == 'criteria') {
+            continue;
+        } else if (form_params[key]['name'].substring(0, 7) == 'period_') {
+            // grab the period param
+            if (form_params[key]['value'] == '1') {
+                periods.push(form_params[key]['name'].substring(7));
+            }
+        } else if (form_params[key]['name'].substring(0, 8) == 'distrib_') {
+            // grab the distrib param
+            if (form_params[key]['value'] == '1') {
+                distribs.push(form_params[key]['name'].substring(8));
+            }
+        }  else {
+            i = {}; //hash needs to be built at runtime
+            i[form_params[key]['name']] = form_params[key]['value'];
+            queries.push({
+                "field": i
+            });
+        }
+    }
+    if (periods.length > 0) {
+    	i = {
+            "field": {
+                "period": periods.join(' ')
+            }
+       };
+        queries.push(i);
+    }
+    if (distribs.length > 0) {
+        console.log(distribs);
+    	i = {
+            "field": {
+                "dist": distribs.join(' ')
+            }
+       };
+        queries.push(i);
+    }
+    search_params = {
+        "size": 9000,
+        "query": {"bool": { "must":  queries}}
     };
-
-    function make_left_side_dropdown(){
-        var dropdown = $('<select name="criteria"></select>');
-        var first_option = $('<option value="null">---Choose Criteria---</option>');
-        dropdown.append(first_option);
-        for(var key in search_options){
-            var settings = search_options[key];
-            var option_tag = $('<option></option>');
-            option_tag.attr('value', key);
-            option_tag.html(settings['long_name']);
-            dropdown.append(option_tag);
-        }
-        dropdown.change(function(){
-            choice = $(this).val();
-            old_value = dropdown.data('old_value');
-            dropdown.data('old_value', choice);
-            if(choice == 'null'){
-                var right_side_html = '';
-                if(!$(this).data('is_empty')){
-                    empty_rows++;
-                    $(this).data('is_empty', true);
-                }
-            }
-            else{
-                search_options[choice]['in_use'] = true;
-                var right_side_html = search_options[choice]['input_field'];
-                if($(this).data('is_empty')){
-                    empty_rows--;
-                    $(this).data('is_empty', false);
-                }
-            }
-            if(old_value){
-                search_options[old_value]['in_use'] = false;
-
-            }
-            var right_side = $(this).parents('fieldset.search_row').find('.right_side')
-            right_side.html(right_side_html);
-            add_search_row_if_we_need_one();
-        });
-        dropdown.data('is_empty', true);
-        dropdown.mouseenter(function(){
-            for(key in search_options){
-                if(search_options[key]['in_use']){
-                    $(this).find("option[value='" + key + "']").hide();
-                    
-                }
-                else{
-                    $(this).find("option[value='" + key + "']").show();
-                }
-            }
-        });
-        return dropdown
-        
-    }
-
-    function add_search_row_if_we_need_one(){
-        while(empty_rows<=0){
-            insert_search_row_dom_element();
-        }
-    }
-    function make_search_row_dom_element(){
-        row = $(' <fieldset class="search_row"> </fieldset> ');
-        left_side = $(' <fieldset class="left_side"> </fieldset> ');
-        left_side.append(make_left_side_dropdown());
-        right_side = $(' <fieldset class="right_side"></fieldset> ');
-        row.append(left_side);
-        row.append(right_side);
-        return row[0];
-    }
-    function get_search_form(){
-        return $('#search_form');
-    }
-    function insert_search_row_dom_element(){
-        row = make_search_row_dom_element();
-        get_search_form().find('.rows').append(row);
-        empty_rows++;
-        return row;
-    }
-    function do_search(){
-        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
-        the_form = $('#search_form');
-        form_params = the_form.serializeArray();
-        periods = [];
-        for(key in form_params){
-            if(form_params[key]['name'] == 'criteria'){
-                continue;
-            }
-            else if(form_params[key]['name'].substring(0,7) == 'period_'){
-                if(form_params[key]['value'] == '1'){
-                    periods.push(form_params[key]['name'].substring(7));
-                }
-            }
-        // grab the period param
-        }
-        periods_query = {"terms" : {"period" : periods, "minimum_match" : 1}};
-        search_params = {
-            "size" : 9000,
-            "query" : periods_query,
-        };
-        $.ajax({dataType: "json", type: "POST", url : query_url, data : JSON.stringify(search_params), success : function(data){
+    console.log(JSON.stringify(search_params));
+    $.ajax({
+        dataType: "json",
+        type: "POST",
+        url: query_url,
+        data: JSON.stringify(search_params),
+        success: function (data) {
             //we only want the juicy part of the data
-            console.log(JSON.stringify(data));
+            //console.log(JSON.stringify(data));
             data = data['hits']['hits'];
-            for(key in data){
+            for (key in data) {
                 data[key] = data[key]["_source"];
-                //pull the dept, number, section info out of the "names" field
+                //pull the Department, number, section info out of the "names" field
                 data[key]['Department'] = data[key]["names"][0]["Department"];
                 data[key]['Number'] = data[key]["names"][0]["Number"];
                 data[key]['Section'] = data[key]["names"][0]["Section"];
             }
-            
+
             show_results(data);
         },
-        error: function(e) {alert(JSON.stringify(e))}});
-        //until then, just do this:
-        //show_results(results);
-    }
-    //RUN THIS STUFF AT PAGE LOAD
-    $().ready(function(){
-        for(key in search_options){
-            search_options[key]['in_use'] = false;
+        error: function (e) {
+            alert(JSON.stringify(e))
         }
-
-        row1 = insert_search_row_dom_element();
-        row1 = $(row1);
-        /*
-        row2 = insert_search_row_dom_element();
-        row2 = $(row2);
-        */
-
-        row1.find("select option:selected").removeAttr('selected');
-        row1.find("select option[value='time']").attr('selected', 'selected');
-        row1.find("select").change();
-
-        /*
-        row2.find("select option:selected").removeAttr('selected');
-        row2.find("select option[value='dept']").attr('selected', 'selected');
-        row2.find("select").change();
-        */
-        //show_favorites();
-        $("form#search_form input[type='submit']").click(function(){
-            do_search();
-            return false;
-            });
     });
+    //until then, just do this:
+    //show_results(results);
+}
+//RUN THIS STUFF AT PAGE LOAD
+$().ready(function () {
+    for (key in search_options) {
+        search_options[key]['in_use'] = false;
+    }
 
-</script>
+    row1 = insert_search_row_dom_element();
+    row1 = $(row1);
 
-</head>
-<body>
+    row2 = insert_search_row_dom_element();
+    row2 = $(row2);
 
+    row1.find("select option:selected").removeAttr('selected');
+    row1.find("select option[value='term']").attr('selected', 'selected');
+    row1.find("select").change();
 
-<div id="header">
-<h1>
-Pickr
-</h1>
-<h2>
-by <a href="http://hacktown.cs.dartmouth.edu">hacker club</a>
-</h2>
-</div>
+    row2.find("select option:selected").removeAttr('selected');
+    row2.find("select option[value='time']").attr('selected', 'selected');
+    row2.find("select").change();
 
+    //show_favorites();
+    $("form#search_form input[type='submit']").click(function () {
+    	try{
+        	do_search();
+        }catch(e){
+        	alert(e.message)
+        }
+        return false;
+    });
+});	</script>
+	</head>
+	<body>
+		<div id="header">
+			<h1>Pickr</h1>
+			<h2>
+			by
+			<a href="http://hacktown.cs.dartmouth.edu">hacker club</a>
+			</h2>
+		</div>
+		<div id="content">
 
+			<div id="search">
+				<h3>Search</h3>
+				<form method="" action="" id="search_form">
+					<fieldset class="rows">
+					</fieldset>
+					<input type="submit" value="Search &raquo;"/>
+				</form>
+			</div>
+			<div id="results_container">
+			</div>
+			<!--
+			<div id="favorites">
 
-<div id="content">
+			<h2>
+			Favorites
+			</h2>
 
-<div id="search">
-<h3>
-Search
-</h3>
-
-<form method="" action="" id="search_form">
-<fieldset class="rows">
-</fieldset>
-<input type="submit" value="Search &raquo;"/>
-</form>
-</div>
-
-
-<div id="results_container">
-</div>
-
-<!--
-<div id="favorites">
-
-<h2>
-Favorites
-</h2>
-
-
-
-</div>
--->
-
-
-
-</div>
-</body>
+			</div>
+			-->
+		</div>
+	</body>
 </html>
