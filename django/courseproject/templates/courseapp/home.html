@@ -342,6 +342,7 @@ function generate_input_field_quarter(){
 function generate_input_field_time(){
     times = [
         '8',
+        '9',
         '9L',
         '9S',
         '10',
@@ -546,14 +547,13 @@ var search_options = {
             "size" : 9000,
             "query" : periods_query,
         };
-        search_params = {"size":9000,"query":{"term":{"period":"8"}}};
         console.log(search_params);
         console.log(periods);
         //search_params = the_form.serializeArray();  //if we wanted to do something fancier
         //query_url = query_url_base + '&' + search_params; 
         // once the db actually works, uncomment this and make it happen
         console.log(JSON.stringify(search_params));
-        $.ajax({dataType: "json", type: "GET", url : query_url, data : (search_params), success : function(data){
+        $.ajax({dataType: "json", type: "POST", url : query_url, data : JSON.stringify(search_params), success : function(data){
             //we only want the juicy part of the data
             console.log(JSON.stringify(data));
             data = data['hits']['hits'];
