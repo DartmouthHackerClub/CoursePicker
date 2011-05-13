@@ -77,7 +77,7 @@ function show_results(results) {
         result_div.append(time);
         crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
         result_div.append(crn);
-        if(result['dist']){
+        if(result['dist'] && result['dist'].length > 0){
             distrib = $('<span class="distrib">Distrib:' + result['dist'] + '</span>');
         }
         else{
