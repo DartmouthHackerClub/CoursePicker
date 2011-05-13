@@ -55,8 +55,8 @@ offering_div = $('<div class="offering"></div>');
 
 term = $('<span class="term">' + offering['term'] + '</span>');
 offering_div.append(term);
-prof = $('<span class="prof">' + offering['prof'] + '</span>');
-offering_div.append(prof);
+Professors = $('<span class="Professors">' + offering['Professors'] + '</span>');
+offering_div.append(Professors);
 time = $('<span class="time">' + offering['time'] + '</span>');
 offering_div.append(time);
 crn = $('<span class="crn">CRN:' + offering['crn'] + '</span>');
@@ -86,13 +86,15 @@ Results \
 
 function generate_input_field_quarter() {
     quarters = ['Fall', 'Winter', 'Spring', 'Summer'];
-    html = '';
+    date = new Date();
+    var html = '';
     html += '<select name="term">';
     for (key in quarters) {
         quarter = quarters[key];
         html += '<option value="' + quarter + '">' + quarter + '</option>';
     }
     html += '</select>';
+    //html += '<input name="year" id="year" type="text" size="5" value="' +date.getFullYear() + '">';
     return html;
 }
 
@@ -123,7 +125,7 @@ function generate_input_field_distrib() {
 var search_options = {
     'Professors': {
         'long_name': 'Professor',
-        'input_field': '<input type="text" name="prof" id="prof" value=""/>',
+        'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
     },
     'title': {
         'long_name': 'Title',
@@ -131,7 +133,7 @@ var search_options = {
     },
     'Names': {
         'long_name': 'Department',
-        'input_field': '<input type="text" name="dept" id="dept" value=""/>',
+        'input_field': '<input type="text" name="Department" id="dept" value=""/>',
     },
     'time': {
         'long_name': 'Meeting Time',
@@ -271,17 +273,11 @@ function do_search() {
             if (form_params[key]['value'] == '1') {
                 periods.push(form_params[key]['name'].substring(7));
             }
-        } else if (form_params[key]['name'] == 'prof') {
-            queries.push({
-                "term": {
-                    "Professors": form_params[key].value
-                }
-            });
-        } else {
+        }  else {
             i = {}; //hash needs to be built at runtime
             i[form_params[key]['name']] = form_params[key]['value'];
             queries.push({
-                "term": i
+                "field": i
             });
         }
     }
@@ -296,12 +292,9 @@ function do_search() {
     }
     search_params = {
         "size": 9000,
-        "query": {
-            "bool": {
-                "must": queries
-            }
-        }
+        "query": {"bool": { "must":  queries}}
     };
+    console.log(JSON.stringify(search_params));
     $.ajax({
         dataType: "json",
         type: "POST",
@@ -309,12 +302,11 @@ function do_search() {
         data: JSON.stringify(search_params),
         success: function (data) {
             //we only want the juicy part of the data
-            console.log(JSON.stringify(data));
-            console.log(JSON.stringify(search_params));
+            //console.log(JSON.stringify(data));
             data = data['hits']['hits'];
             for (key in data) {
                 data[key] = data[key]["_source"];
-                //pull the dept, number, section info out of the "names" field
+                //pull the Department, number, section info out of the "names" field
                 data[key]['Department'] = data[key]["names"][0]["Department"];
                 data[key]['Number'] = data[key]["names"][0]["Number"];
                 data[key]['Section'] = data[key]["names"][0]["Section"];
@@ -348,7 +340,7 @@ row2 = $(row2);
 
 /*
 row2.find("select option:selected").removeAttr('selected');
-row2.find("select option[value='dept']").attr('selected', 'selected');
+row2.find("select option[value='Department']").attr('selected', 'selected');
 row2.find("select").change();
 */
     //show_favorites();
