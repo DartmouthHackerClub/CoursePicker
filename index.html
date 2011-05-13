@@ -341,10 +341,6 @@ function do_search() {
             });
         }
     }
-    if(distribs.length > 0){
-         i = { "terms" : { "dist" : distribs, "minimum_match" : 1}};
-         queries.push(i);
-    } 
     if (periods.length > 0) {
     	i = {
             "terms": {
@@ -357,9 +353,8 @@ function do_search() {
     if (distribs.length > 0) {
         console.log(distribs);
     	i = {
-            "terms": {
-                "dist": distribs,
-                "minimum_match": 1
+            "field": {
+                "dist": distribs.join(' ')
             }
        };
         queries.push(i);
