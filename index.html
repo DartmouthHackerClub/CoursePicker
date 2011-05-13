@@ -87,13 +87,13 @@ function get_or_create_results_div() {
     results_div = $('#results');
     if (results_div.length < 1) {
         results_div = $('\
-<div id="results"> \
-<h3> \
-Results \
-</h3> \
-<div id="the_results"> \
-</div> \
-');
+            <div id="results"> \
+            <h3> \
+            Results \
+            </h3> \
+            <div id="the_results"> \
+            </div> \
+            ');
     }
     $('#results_container').append(results_div);
     return results_div;
@@ -273,11 +273,16 @@ function add_search_row_if_we_need_one() {
     $(".check_none").click(function () {
         $(this).parent().children("input").attr('checked', '');
     });
+    $(".close_row").click(function () {
+        $(this).parent().parent().hide();
+    });
 }
 
 function make_search_row_dom_element() {
     row = $(' <fieldset class="search_row"> </fieldset> ');
     left_side = $(' <fieldset class="left_side"> </fieldset> ');
+    close_link = $('<a href="#" class="close_row">X</a>');
+    left_side.append(close_link);
     left_side.append(make_left_side_dropdown());
     right_side = $(' <fieldset class="right_side"></fieldset> ');
     row.append(left_side);

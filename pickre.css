@@ -71,7 +71,12 @@ fieldset{
     height: 100%;
 }
 .search_row .left_side select{
-    width: 100%;
+    width: 93%;
+    overflow: hidden;
+}
+.search_row .left_side .close_link{
+    width: 7%;
+    overflow: hidden;
 }
 
 .search_row .right_side{
