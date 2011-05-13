@@ -526,7 +526,7 @@ var search_options = {
         return row;
     }
     function do_search(){
-        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
+        query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search?size=9000';
         the_form = $('#search_form');
         form_params = the_form.serializeArray();
         periods = [];
@@ -541,26 +541,21 @@ var search_options = {
             }
         // grab the period param
         }
-        search_params = {};
-        periods_or = [];
-        for(key in periods){
-            periods_or.push({"term" : {"period" : periods[key]} });
-            //search_params.push('filter': { "or" []});
-        }
-        periods_or = {"or" : periods_or};
+        periods_query = {"terms" : {"period" : periods, "minimum_match" : 1}};
         search_params = {
-            "filtered" : {
-                "match_all" : {},
-                "filter" : periods_or
-            }
-        }
+            "size" : 9000,
+            "query" : periods_query,
+        };
+        search_params = {"size":9000,"query":{"term":{"period":"8"}}};
         console.log(search_params);
         console.log(periods);
         //search_params = the_form.serializeArray();  //if we wanted to do something fancier
         //query_url = query_url_base + '&' + search_params; 
         // once the db actually works, uncomment this and make it happen
-        $.get(query_url, search_params, function(data){
+        console.log(JSON.stringify(search_params));
+        $.ajax({dataType: "json", type: "GET", url : query_url, data : (search_params), success : function(data){
             //we only want the juicy part of the data
+            console.log(JSON.stringify(data));
             data = data['hits']['hits'];
             for(key in data){
                 data[key] = data[key]["_source"];
@@ -571,7 +566,7 @@ var search_options = {
             }
             
             show_results(data);
-        });
+        }});
         //until then, just do this:
         //show_results(results);
     }
