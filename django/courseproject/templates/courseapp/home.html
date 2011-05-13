@@ -186,62 +186,6 @@ function get_or_create_favorite_timeslot_div(timeslot){
 }
 */
 
-
-//NOTE/TODO: the below is just bootsrapping--it's for testing. it'd be nice to get the actual results in this format. once we're rolling, we can remove this big struct
-
-var results = [
-    {
-        'dept' : 'COSC',
-        'number' : '005',
-        'desc' : "\
-            The final term of a year-long graduate-level course in biochemistry, cell and molecular biology. A continuation of Biochemistry 101 and Genetics 102. Topics include cell signaling; neurobiology; metabolism; cytoskeleton, cell shape and movement; mitosis and meiosis, regulation of cell growth and division; oncogenes and tumor suppressor genes; proteosomes and protein turnover; apoptosis. \
-            ",
-        'current_offerings' : [
-            {
-                'prof': 'Prasad',
-                'time': '10A',
-                'term': '11F',
-                'crn': '03428347',
-                },
-            {
-                'prof': 'Balkcom',
-                'time': '10',
-                'term': '10F',
-                'crn': '9423487',
-                },
-            ],
-        'past_offerings' : [
-            {
-                'prof': 'Cormen',
-                'time': '10A',
-                'term': '09F',
-                'crn': '0383947',
-                },
-            {
-                'prof': 'Cormen',
-                'time': '10',
-                'term': '08F',
-                'crn': '402398',
-                },
-            ],
-        },
-    {
-        'dept' : 'COSC',
-        'number' : '001',
-        'desc' : "\
-            The first term of a year-long graduate-level course in biochemistry, cell and molecular biology. Topics include structure, function, and biosynthesis of proteins, nucleic acids and lipids; enzyme kinetics and enzyme mechanisms; gene regulation, transcription and translation; recombinant DNA technology; nuclear trafficking, the secretory pathway, and endocytosis. Note that this course begins prior to the official start of fall-term classes, and students outside of the MCB program should contact the Biochemistry Department for the date of the first lecture. \
-            ",
-        'current_offerings' : [
-            {
-                'prof': 'Prasad',
-                'time': '2A',
-                'term': '10S',
-                'crn': '093402839487',
-                },
-            ],
-        },
-    ];
-
 var empty_rows = 0;
 
 function show_results(results){
@@ -250,7 +194,7 @@ function show_results(results){
     for(key in results){
         result = results[key];
         result_div = $('<div class="result"></div>');
-        dept_num = $('<span class="dept_num">' + result['Department']+result['Number'] + '</span>');
+        dept_num = $('<span class="dept_num_title">' + result['Department']+result['Number'] + ': ' + result['title'] + '</span>');
         result_div.append(dept_num);
         //desc = $('<span class="desc">' + result['desc'] + '</span>');
         //result_div.append(desc);
@@ -342,6 +286,7 @@ function generate_input_field_quarter(){
 function generate_input_field_time(){
     times = [
         '8',
+        '9',
         '9L',
         '9S',
         '10',
@@ -546,14 +491,7 @@ var search_options = {
             "size" : 9000,
             "query" : periods_query,
         };
-        search_params = '{"size":9000,"query":{"term":{"period":"8"}}}';
-        console.log(search_params);
-        console.log(periods);
-        //search_params = the_form.serializeArray();  //if we wanted to do something fancier
-        //query_url = query_url_base + '&' + search_params; 
-        // once the db actually works, uncomment this and make it happen
-        console.log(JSON.stringify(search_params));
-        $.ajax({dataType: "json", type: "POST", url : query_url, data : (search_params), success : function(data){
+        $.ajax({dataType: "json", type: "POST", url : query_url, data : JSON.stringify(search_params), success : function(data){
             //we only want the juicy part of the data
             console.log(JSON.stringify(data));
             data = data['hits']['hits'];
