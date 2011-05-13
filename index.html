@@ -140,6 +140,8 @@ Results \
 function generate_input_field_quarter() {
     quarters = ['Fall', 'Winter', 'Spring', 'Summer'];
     date = new Date();
+    this_year = date.getFullYear();
+    years = [this_year, this_year+1]
     var html = '';
     html += '<select name="term">';
     for (key in quarters) {
@@ -147,7 +149,13 @@ function generate_input_field_quarter() {
         html += '<option value="' + quarter + '">' + quarter + '</option>';
     }
     html += '</select>';
-    html += '<input name="year" id="year" type="text" size="5" value="' +date.getFullYear() + '">';
+    html += '<select name="year">';
+    for (key in years) {
+        year = years[key];
+        html += '<option value="' + year+ '">' + year+ '</option>';
+    }
+    html += '</select>';
+    //html += '<input name="year" id="year" type="text" size="5" value="' +date.getFullYear() + '">';
     return html;
 }
 
