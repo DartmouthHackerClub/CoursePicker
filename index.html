@@ -357,6 +357,14 @@ function get_search_form() {
 function insert_search_row_dom_element() {
     row = make_search_row_dom_element();
     get_search_form().find('.rows').append(row);
+    /*
+    if (row.find('#Professors')) {
+        $('#Professors').focus();
+    }
+    else if (row.find('#title')) {
+        $('#title').focus();
+    }
+    */
     empty_rows++;
     return row;
 }
