@@ -528,6 +528,22 @@ function do_search() {
                 "field": i
             });
         }
+        else if (form_params[key]['name'] == 'Professors' && form_params[key]['value'] != '') {
+            var val = form_params[key]['value'];
+            splits = val.split(' ');
+            joinme = [];
+            for (s in splits) {
+                if (splits[s] != '')
+                    joinme.push(splits[s]);
+            }
+            val = joinme.join(' AND ');
+
+            i = {}; //hash needs to be built at runtime
+            i['Professors'] = val;
+            queries.push({
+                "field": i
+            });
+        }
         else if (form_params[key]['name'] == 'Number' && form_params[key]['value'] != '') {
             var val = parseInt(form_params[key]['value']);
             if (isNaN(val))
