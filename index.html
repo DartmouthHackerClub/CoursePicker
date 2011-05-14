@@ -8,9 +8,13 @@
 		-->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 		<script type="text/javascript" src="dept_map.js"></script>
-		<script type="text/javascript" >
+      <script type="text/javascript" src="jquery.autocomplete.min.js"></script>
 
+		<script type="text/javascript" >
+var profs = {};
+var dept_abbrevs = {};
 var empty_rows = 0;
+var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
 function show_error(e) {
     console.log(e);
@@ -399,6 +403,8 @@ function add_search_row_if_we_need_one() {
         left_side.find("select").change();
         left_side.parent().hide();
     });
+    $('input[name="Professors"]').autocomplete(profs);
+    $('input[name="Department"]').autocomplete(dept_abbrevs);
 }
 
 function make_search_row_dom_element() {
@@ -433,8 +439,8 @@ function insert_search_row_dom_element() {
     return row;
 }
 
+
 function do_search() {
-    query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
     the_form = $('#search_form');
     form_params = the_form.serializeArray();
     periods = [];
@@ -522,6 +528,26 @@ function do_search() {
 }
 //RUN THIS STUFF AT PAGE LOAD
 $().ready(function () {
+    search_params = {
+        "size": 9000,
+    };
+    $.ajax({
+        dataType: "json",
+        type: "POST",
+        url: query_url,
+        data: JSON.stringify(search_params),
+        success: function (data) {
+            data = data['hits']['hits'];
+            console.log(data);
+            profs = $.map(data , function(x){ return x['_source']['Professors']})
+            dept_abbrevs = $.map(data , function(x){ return x['_source']['names'][0]['Department']})
+            console.log(dept_abbrevs);
+        },
+        error: function (e) {
+            alert(JSON.stringify(e));
+        }
+    });
+        
     for (key in search_options) {
         search_options[key]['in_use'] = false;
     }
@@ -542,7 +568,11 @@ $().ready(function () {
         }
         return false;
     });
-});	</script>
+
+
+
+});
+</script>
 	</head>
 	<body>
 		<div id="header">
