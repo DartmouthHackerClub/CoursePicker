@@ -488,7 +488,7 @@ function do_search() {
 
     queries = [];
     for (key in form_params) {
-        if (form_params[key]['name'] == 'Department') {
+        if (form_params[key]['name'] == 'Department' && form_params[key]['value'] != '') {
             var val = form_params[key]['value'];
             // resolve dept
             if (!dept_map[val]) {
@@ -506,11 +506,10 @@ function do_search() {
                 "field": i
             });
         }
-        else if (form_params[key]['name'] == 'description') {
+        else if (form_params[key]['name'] == 'description' && form_params[key]['value'] != '') {
             var val = form_params[key]['value'];
             splits = val.split(' ');
             val = splits.join(' AND ');
-
 
             i = {}; //hash needs to be built at runtime
             i['description'] = val;
