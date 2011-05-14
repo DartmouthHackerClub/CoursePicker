@@ -11,9 +11,23 @@
 
 var empty_rows = 0;
 
+function show_error(e) {
+    console.log(e);
+    the_results_div = get_or_create_results_div().find('#the_results');
+    the_results_div.empty();
+    result_div = $('<div class="result"><h3>OH NOES! AN ERROR!</h3><h4>Shield Your Eyes:</h4><div>');
+    result_div.append(JSON.stringify(e));
+    the_results_div.append(result_div);
+    return true;
+}
 function show_results(results) {
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
+    if(!results || results == '' || results == {}){
+        result_div = $('<div class="result">No results :(</div>');
+        the_results_div.append(result_div);
+        return false;
+    }
     for (key in results) {
         result = results[key];
         result_div = $('<div class="result"></div>');
@@ -384,11 +398,10 @@ function do_search() {
                 data[key]['Number'] = data[key]["names"][0]["Number"];
                 data[key]['Section'] = data[key]["names"][0]["Section"];
             }
-
             show_results(data);
         },
         error: function (e) {
-            alert(JSON.stringify(e))
+            show_error(e);
         }
     });
 }
@@ -401,16 +414,16 @@ $().ready(function () {
     row1 = insert_search_row_dom_element();
     row1 = $(row1);
 
-    row2 = insert_search_row_dom_element();
-    row2 = $(row2);
+    //row2 = insert_search_row_dom_element();
+    //row2 = $(row2);
 
     row1.find("select option:selected").removeAttr('selected');
     row1.find("select option[value='term']").attr('selected', 'selected');
     row1.find("select").change();
 
-    row2.find("select option:selected").removeAttr('selected');
-    row2.find("select option[value='time']").attr('selected', 'selected');
-    row2.find("select").change();
+    //row2.find("select option:selected").removeAttr('selected');
+    //row2.find("select option[value='time']").attr('selected', 'selected');
+    //row2.find("select").change();
 
     //show_favorites();
     $("form#search_form input[type='submit']").click(function () {
