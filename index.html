@@ -1,14 +1,12 @@
 <html>
 	<head>
-		<title>Pickr, by Hacker Club</title>
-		<link rel="stylesheet" type="text/css"  href="pickre.css" />
+		<title>Dartmouth Course Picker by Hacker Club</title>
 
-		<!--
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
-		-->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 		<script type="text/javascript" src="dept_map.js"></script>
         <script type="text/javascript" src="jquery-autocomplete/jquery.autocomplete.min.js"></script>
+
+		<link rel="stylesheet" type="text/css"  href="pickre.css" />
 		<link rel="stylesheet" type="text/css"  href="jquery-autocomplete/jquery.autocomplete.css" />
 
 		<script type="text/javascript" >
@@ -517,7 +515,12 @@ function do_search() {
         else if (form_params[key]['name'] == 'description' && form_params[key]['value'] != '') {
             var val = form_params[key]['value'];
             splits = val.split(' ');
-            val = splits.join(' AND ');
+            joinme = [];
+            for (s in splits) {
+                if (splits[s] != '')
+                    joinme.push(splits[s]);
+            }
+            val = joinme.join(' AND ');
 
             i = {}; //hash needs to be built at runtime
             i['description'] = val;
