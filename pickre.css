@@ -192,3 +192,22 @@ fieldset{
 .result .offering .crn{
     margin-left: 5px;
 }
+
+a.close_row{
+    text-decoration: none;
+    font-size: .8em;
+    vertical-align: middle;
+    margin: 2px;
+    color: red;
+    border: 1px solid gray;
+    font-family: courier new;
+    padding: 0 3px 0 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+a.close_row:hover{
+    background-color: gray;
+    border-color: red;
+}
