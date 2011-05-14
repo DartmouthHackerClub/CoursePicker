@@ -298,17 +298,21 @@ var search_options = {
         'long_name': 'Professor',
         'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
     },
-    'description': {
-        'long_name': 'Course Description',
-        'input_field': '<input type="text" name="description" id="description" value=""/>',
-    },
     'title': {
         'long_name': 'Title',
         'input_field': '<input type="text" name="title" id="title" value=""/>',
     },
-    'Names': {
+    'department': {
         'long_name': 'Department',
         'input_field': '<input type="text" name="Department" id="dept" value=""/>',
+    },
+    'Number': {
+        'long_name': 'Course Number',
+        'input_field': '<input type="text" name="Number" id="Number" value=""/>',
+    },
+    'description': {
+        'long_name': 'Course Description',
+        'input_field': '<input type="text" name="description" id="description" value=""/>',
     },
     'time': {
         'long_name': 'Meeting Time',
@@ -517,6 +521,23 @@ function do_search() {
 
             i = {}; //hash needs to be built at runtime
             i['description'] = val;
+            queries.push({
+                "field": i
+            });
+        }
+        else if (form_params[key]['name'] == 'Number' && form_params[key]['value'] != '') {
+            var val = parseInt(form_params[key]['value']);
+            if (isNaN(val))
+                continue;
+
+            // course numbers are length 3, padded by 0s
+            var pad = val+'';
+            while (pad.length < 3) {
+                pad = '0'+pad;
+            }
+
+            i = {}; //hash needs to be built at runtime
+            i['Number'] = pad;
             queries.push({
                 "field": i
             });
