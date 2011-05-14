@@ -12,7 +12,7 @@
 
 		<script type="text/javascript" >
 var profs = {};
-var dept_abbrevs = {};
+var dept_abbrevs = null;
 var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
@@ -403,8 +403,15 @@ function add_search_row_if_we_need_one() {
         left_side.find("select").change();
         left_side.parent().hide();
     });
-    $('input[name="Professors"]').autocomplete(profs);
-    $('input[name="Department"]').autocomplete(dept_abbrevs);
+    $('input[name="Professors"]').autocomplete(profs,
+            {
+                matchContains: true,
+                autoFill: true
+            });
+    $('input[name="Department"]').autocomplete(dept_abbrevs,
+            {
+            autoFill: true,
+            });
 }
 
 function make_search_row_dom_element() {
@@ -448,7 +455,26 @@ function do_search() {
 
     queries = [];
     for (key in form_params) {
-        if (form_params[key]['name'] == 'criteria') {
+        console.log(form_params[key]['name']);
+        if (form_params[key]['name'] == 'Department') {
+            var val = form_params[key]['value'];
+            // resolve dept
+            if (!dept_map[val]) {
+                //try to resolve it
+                for (key in dept_map) {
+                    if (dept_map[key]['name'] == val) {
+                        val = key;
+                    }
+                }
+            }
+
+            i = {}; //hash needs to be built at runtime
+            i['Department'] = val;
+            queries.push({
+                "field": i
+            });
+        }
+        else if (form_params[key]['name'] == 'criteria') {
             continue;
         } else if (form_params[key]['name'].substring(0, 7) == 'period_') {
             // grab the period param
@@ -468,6 +494,7 @@ function do_search() {
             });
         }
     }
+
     if (periods.length > 0) {
     	i = {
             "field": {
@@ -538,10 +565,12 @@ $().ready(function () {
         data: JSON.stringify(search_params),
         success: function (data) {
             data = data['hits']['hits'];
-            console.log(data);
-            profs = $.map(data , function(x){ return x['_source']['Professors']})
-            dept_abbrevs = $.map(data , function(x){ return x['_source']['names'][0]['Department']})
-            console.log(dept_abbrevs);
+            profs = $.unique($.map(data , function(x){ return x['_source']['Professors']}));
+            dept_abbrevs = []
+            for (key in dept_map) {
+                dept_abbrevs.push(key);
+                dept_abbrevs.push(dept_map[key]['name']);
+            }
         },
         error: function (e) {
             alert(JSON.stringify(e));
