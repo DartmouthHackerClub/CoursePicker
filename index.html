@@ -46,6 +46,7 @@ function show_results(results) {
     */
     for (key in results) {
         result = results[key];
+        if (!result) continue;
         result_div = $('<div class="result"></div>');
 
         // title
@@ -60,8 +61,8 @@ function show_results(results) {
         term = $('<span class="term"><span class="fieldname">term </span>' + result['term'] + ' ' + result['year'] + '</span>');
         result_div.append(term);
 
+
         // profs
-        num_profs = 0;
         profs_div = $('<span class="profs"></span>');
         if (result['Professors'].length <= 1) {
 			profs_div.append($('<span class="fieldname">prof </span>'));
@@ -70,14 +71,16 @@ function show_results(results) {
 			profs_div.append($('<span class="fieldname">profs </span>'));
         }
         if (result['Professors'].length > 0) {
+            var first = true;
+            var html = '';
             for (key in result['Professors']) {
-                prof = result['Professors'][key];
-                if (num_profs > 0) {
-                    profs_div.append($(', '));
+                if (!first) {
+                    html += ', ';
                 }
-                profs_div.append(prof);
-                num_profs++;
+                first = false;
+                html += result['Professors'][key];
             }
+            profs_div.append(html);
         }
         else {
             profs_div.append($('<span class="notfound">none listed</span>'));
@@ -89,19 +92,20 @@ function show_results(results) {
         result_div.append(time);
 
 		// Distribs
-        num_dists = 0;
         distrib = $('<span class="distrib"><span class="fieldname">distrib </span></span>');
         if(result['dist'] && result['dist'].length > 0){
+            var first = true;
+            var html = '';
             // TODO at the moment we bundle distribs together into a string
             // so this is unnecessary
             for (key in result['dist']) {
-                dist = result['dist'][key];
-                if (num_dists > 0) {
-                    distrib.append($(', '));
+                if (!first) {
+                    html += ', ';
                 }
-                distrib.append(dist);
-                num_dists++;
+                first = false;
+                html += result['dist'][key];
             }
+            distrib.append(html);
         }
         else{
             distrib.append($('<span class="notfound">none</span>'));
@@ -127,7 +131,6 @@ function show_results(results) {
             nro.append($('<span class="notfound">no</span>'));
         }
         result_div.append(nro);
-
 
         // Median
         var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>');
@@ -190,7 +193,6 @@ function get_median(dept, num, dom) {
                 if (!data[key]["_source"]) {
                     continue;
                 }
-                console.log(data[key]['_source']['median']);
                 switch (data[key]['_source']['median']) {
                     case "A": total+=4.0;break;
                     case "A-": total+=3.66;break;
@@ -455,7 +457,6 @@ function do_search() {
 
     queries = [];
     for (key in form_params) {
-        console.log(form_params[key]['name']);
         if (form_params[key]['name'] == 'Department') {
             var val = form_params[key]['value'];
             // resolve dept
@@ -504,7 +505,6 @@ function do_search() {
         queries.push(i);
     }
     if (distribs.length > 0) {
-        console.log(distribs);
     	i = {
             "field": {
                 "dist": distribs.join(' ')
@@ -528,6 +528,7 @@ function do_search() {
             data = data['hits']['hits'];
             for (key in data) {
                 data[key] = data[key]["_source"];
+                if (!data[key]) continue;
                 //pull the Department, number, section info out of the "names" field
                 data[key]['Department'] = data[key]["names"][0]["Department"];
                 data[key]['Number'] = data[key]["names"][0]["Number"];
@@ -553,20 +554,20 @@ function do_search() {
         }
     });
 }
+
+function removeDups(arrVal) {
+    var uniqueArr = [];
+    for (var i = arrVal.length; i--; ) {
+        var val = arrVal[i];
+        if ($.inArray(val, uniqueArr) === -1) {
+            uniqueArr.unshift(val);
+        }
+    }
+    return uniqueArr;
+}
+
 //RUN THIS STUFF AT PAGE LOAD
 $().ready(function () {
-    Array.prototype.unique = function () {
-        var arrVal = this;
-        var uniqueArr = [];
-        for (var i = arrVal.length; i--; ) {
-            var val = arrVal[i];
-            if ($.inArray(val, uniqueArr) === -1) {
-                uniqueArr.unshift(val);
-            }
-        }
-        return uniqueArr;
-    }
-
     search_params = {
         "size": 9000,
     };
@@ -577,7 +578,7 @@ $().ready(function () {
         data: JSON.stringify(search_params),
         success: function (data) {
             data = data['hits']['hits'];
-            profs = $.map(data , function(x){ return x['_source']['Professors']}).unique();
+            profs = removeDups($.map(data , function(x){ return x['_source']['Professors']}));
             dept_abbrevs = []
             for (key in dept_map) {
                 dept_abbrevs.push(key);
