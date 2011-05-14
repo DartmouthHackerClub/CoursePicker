@@ -20,6 +20,7 @@ function show_error(e) {
     the_results_div.append(result_div);
     return true;
 }
+
 function show_results(results) {
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
@@ -28,50 +29,97 @@ function show_results(results) {
         the_results_div.append(result_div);
         return false;
     }
+    /*
+		dept_num_title
+		term
+		profs
+		time
+		distrib
+		wcult
+		crn
+		nro
+    */
     for (key in results) {
         result = results[key];
         result_div = $('<div class="result"></div>');
-        dept_num = $('<span class="dept_num_title">' + result['Department'] + result['Number'] + ': ' + result['title'] + '</span>');
+
+        // title
+        dept_num = $('<span class="dept_num_title">' + result['Department'] + ' ' + result['Number'] + ': ' + result['title'] + '</span>');
         result_div.append(dept_num);
-        //desc = $('<span class="desc">' + result['desc'] + '</span>');
-        //result_div.append(desc);
-        term = $('<span class="term">' + result['term'] + ' ' + result['year'] + '</span>');
+
+        // crn
+        crn = $('<span class="crn">CRN ' + result['CRN'] + '</span>');
+        result_div.append(crn);
+
+        // term
+        term = $('<span class="term"><span class="fieldname">term </span>' + result['term'] + ' ' + result['year'] + '</span>');
         result_div.append(term);
-        //year = $('<span class="year">' + result['year'] + '</span>');
-        //result_div.append(year);
-        profs_div = $('<span class="profs"></span>');
+
+        // profs
         num_profs = 0;
-        for (key in result['Professors']) {
-            prof = result['Professors'][key]
-            if (num_profs > 0) {
-                profs_div.append($(","));
+        profs_div = $('<span class="profs"></span>');
+        if (result['Professors'].length <= 1) {
+			profs_div.append($('<span class="fieldname">prof </span>'));
+        }
+        else {
+			profs_div.append($('<span class="fieldname">profs </span>'));
+        }
+        if (result['Professors'].length > 0) {
+            for (key in result['Professors']) {
+                prof = result['Professors'][key];
+                if (num_profs > 0) {
+                    profs_div.append($(', '));
+                }
+                profs_div.append(prof);
+                num_profs++;
             }
-            profs_div.append(prof);
+        }
+        else {
+            profs_div.append($('<span class="notfound">none listed</span>'));
         }
         result_div.append(profs_div);
-        time = $('<span class="time">' + result['period'] + '</span>');
+
+        // Period
+        time = $('<span class="time"><span class="fieldname">period </span>' + result['period'] + '</span>');
         result_div.append(time);
-        crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
-        result_div.append(crn);
+
+		// Distribs
+        num_dists = 0;
+        distrib = $('<span class="distrib"><span class="fieldname">distrib </span></span>');
         if(result['dist'] && result['dist'].length > 0){
-            distrib = $('<span class="distrib">Distrib:' + result['dist'] + '</span>');
+            // TODO at the moment we bundle distribs together into a string
+            // so this is unnecessary
+            for (key in result['dist']) {
+                dist = result['dist'][key];
+                if (num_dists > 0) {
+                    distrib.append($(', '));
+                }
+                distrib.append(dist);
+                num_dists++;
+            }
         }
         else{
-            distrib = $('<span class="distrib">No Distribs</span>');
+            distrib.append($('<span class="notfound">none</span>'));
         }
         result_div.append(distrib);
+
+        // WCULT
+        wcult = $('<span class="wcult"><span class="fieldname">wcult </span></span>');
         if(result['wc']){
-            wcult = $('<span class="wcult">WCULT:' + result['wc'] + '</span>');
+            wcult.append(result['wc']);
         }
         else{
-            wcult = $('<span class="wcult">No WCULT</span>');
+            wcult.append($('<span class="notfound">none</span>'));
         }
         result_div.append(wcult);
+
+        // Can NRO?
+        nro = $('<span class="nro"><span class="fieldname">nro </span></span>');
         if(result['nro'] == 'true'){
-            nro = $('<span class="nro">Can NRO</span>');
+            nro.append($('<span>yes</span>')); // TODO why is this not displaying w/o <span>?
         }
         else if(result['nro'] == 'false'){
-            nro = $('<span class="nro">Can\'t NRO</span>');
+            nro.append($('<span class="notfound">no</span>'));
         }
         result_div.append(nro);
 
