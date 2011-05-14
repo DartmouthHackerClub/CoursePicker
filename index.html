@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
 		-->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+		<script type="text/javascript" src="dept_map.js"></script>
 		<script type="text/javascript" >
 
 var empty_rows = 0;
@@ -123,8 +124,28 @@ function show_results(results) {
         }
         result_div.append(nro);
 
+
+        // Median
+        var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>');
+        result_div.append(median_div);
+        get_median(result['Department'], result['Number'], median_div);
+
+
+        // Course guide link
+        var deptnum = get_department_number(result['Department']);
+        var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number=&prof=&action=selectcourses2&dept='+deptnum
+            var median_div = $('<span class="median"><span class="fieldname">course guide </span></span><span><a href="'+link+'">link</a></span>');
+        result_div.append(median_div);
+
         the_results_div.append(result_div);
     }
+}
+
+// course guide defines depts by number
+function get_department_number(dept) {
+    if (dept_map && dept_map[dept])
+        return dept_map[dept]['id'];
+    return -1;
 }
 
 function get_or_create_results_div() {
@@ -141,6 +162,53 @@ function get_or_create_results_div() {
     }
     $('#results_container').append(results_div);
     return results_div;
+}
+
+// TODO get with prof - we need to get historical course data too
+function get_median(dept, num, dom) {
+    $.ajax({
+        url: 'http://hacktown.cs.dartmouth.edu/search/medians/medians/_search',
+        dataType: 'json',
+        data: {
+            'q': 'dept:'+dept+' AND number:'+num
+        },
+        success: function(data) {
+            //we only want the juicy part of the data
+            if (!data['hits'] || !data['hits']['hits']) {
+                dom.append('not available');
+                return;
+            }
+            data = data['hits']['hits'];
+            // now average the median
+            var total = 0.0;
+            var num = 0;
+            for (key in data) {
+                if (!data[key]["_source"]) {
+                    continue;
+                }
+                console.log(data[key]['_source']['median']);
+                switch (data[key]['_source']['median']) {
+                    case "A": total+=4.0;break;
+                    case "A-": total+=3.66;break;
+                    case "B+": total+=3.33;break;
+                    case "B": total+=3.0;break;
+                    case "B-": total+=2.66;break;
+                    case "C+": total+=2.33;break;
+                    case "C": total+=2.0;break;
+                    case "C-": total+=1.66;break;
+                    default: continue;
+                }
+                num++;
+            }
+            if (num > 0) {
+                var avg = total/num;
+                dom.append(avg);
+            }
+            else {
+                dom.append('not available');
+            }
+        }
+    });
 }
 
 function generate_input_field_quarter() {
