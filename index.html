@@ -15,7 +15,7 @@ function show_error(e) {
     console.log(e);
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
-    result_div = $('<div class="result"><h3>OH NOES! AN ERROR!</h3><div>');
+    result_div = $('<div class="result"><h3>OH NOES! AN ERROR!</h3><h4>Shield Your Eyes:</h4><div>');
     result_div.append(JSON.stringify(e));
     the_results_div.append(result_div);
     return true;
