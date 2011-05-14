@@ -324,7 +324,12 @@ function add_search_row_if_we_need_one() {
         $(this).parent().children("input").attr('checked', '');
     });
     $(".close_row").click(function () {
-        $(this).parent().parent().hide();
+        left_side = $(this).parent();
+        // choose "null" in the dropdown--just to make sure that the option that had been selected gets added back to the set of available options
+        left_side.find("select option:selected").removeAttr('selected');
+        left_side.find("select option[value='term']").attr('selected', 'selected');
+        left_side.find("select").change();
+        left_side.parent().hide();
     });
 }
 
