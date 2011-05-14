@@ -11,7 +11,7 @@
       <script type="text/javascript" src="jquery.autocomplete.min.js"></script>
 
 		<script type="text/javascript" >
-var profs = {};
+var profs = null;
 var dept_abbrevs = null;
 var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
@@ -462,7 +462,7 @@ function do_search() {
             if (!dept_map[val]) {
                 //try to resolve it
                 for (key in dept_map) {
-                    if (dept_map[key]['name'] == val) {
+                    if (dept_map[key]['name'].toLowerCase() == val.toLowerCase()) {
                         val = key;
                     }
                 }
@@ -555,6 +555,18 @@ function do_search() {
 }
 //RUN THIS STUFF AT PAGE LOAD
 $().ready(function () {
+    Array.prototype.unique = function () {
+        var arrVal = this;
+        var uniqueArr = [];
+        for (var i = arrVal.length; i--; ) {
+            var val = arrVal[i];
+            if ($.inArray(val, uniqueArr) === -1) {
+                uniqueArr.unshift(val);
+            }
+        }
+        return uniqueArr;
+    }
+
     search_params = {
         "size": 9000,
     };
@@ -565,7 +577,7 @@ $().ready(function () {
         data: JSON.stringify(search_params),
         success: function (data) {
             data = data['hits']['hits'];
-            profs = $.unique($.map(data , function(x){ return x['_source']['Professors']}));
+            profs = $.map(data , function(x){ return x['_source']['Professors']}).unique();
             dept_abbrevs = []
             for (key in dept_map) {
                 dept_abbrevs.push(key);
