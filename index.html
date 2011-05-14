@@ -53,6 +53,14 @@ function show_results(results) {
             wcult = $('<span class="wcult">No WCULT</span>');
         }
         result_div.append(wcult);
+        if(result['nro'] == 'true'){
+            nro = $('<span class="nro">Can NRO</span>');
+        }
+        else if(result['nro'] == 'false'){
+            nro = $('<span class="nro">Can\'t NRO</span>');
+        }
+        result_div.append(nro);
+
         the_results_div.append(result_div);
 
 /* this was written with the understanding that we would have a course/offering dichotomy. but now it looks like we won't, so we'll just toss this out for now
@@ -183,6 +191,7 @@ var search_options = {
         'input_field': '\
 <select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>',
     },
+    /*
     'median_grade': {
         'long_name': 'Median Grade',
         'input_field': ' \
@@ -195,9 +204,10 @@ var search_options = {
 </select> \
 ',
     },
-    'NRO': {
+    */
+    'nro': {
         'long_name': 'Can NRO?',
-        'input_field': '<input type="checkbox" checked="checked"/>Heck Yeah',
+        'input_field': '<input type="checkbox" name="nro" value="true" checked="checked"/>Heck Yeah',
     },
 /*
 'enrollment_cap':  {
@@ -205,10 +215,12 @@ var search_options = {
 'input_field' : '<input type="text" name="" id="" value="" />',
 },
 */
+    /*
     'space_left': {
         'long_name': 'Space Left?',
         'input_field': '<input type="checkbox" checked="checked" />Heck Yeah',
     },
+    */
 };
 
 function make_left_side_dropdown() {
