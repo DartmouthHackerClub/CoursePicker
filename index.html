@@ -187,7 +187,7 @@ function get_or_create_results_div() {
             </div> \
             ');
     }
-    $('#results_container').append(results_div);
+    $('#results_container').html(results_div);
     return results_div;
 }
 
@@ -619,6 +619,7 @@ function do_search() {
         "query": {"bool": { "must":  queries}}
     };
     console.log(JSON.stringify(search_params));
+    $('#results_container').html('<h1>Loading...</h1>');
     $.ajax({
         dataType: "json",
         type: "POST",
@@ -739,6 +740,7 @@ $().ready(function () {
 					<input type="submit" value="Search &raquo;"/>
 				</form>
 			</div>
+
 			<div id="results_container">
 			</div>
 			<!--
