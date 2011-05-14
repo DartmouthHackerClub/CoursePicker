@@ -207,7 +207,7 @@ function get_median(dept, num, dom) {
                 num++;
             }
             if (num > 0) {
-                var avg = total/num;
+                var avg = (total/num).toFixed(2);
                 dom.append(avg);
             }
             else {
