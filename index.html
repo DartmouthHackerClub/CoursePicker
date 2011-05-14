@@ -608,7 +608,7 @@ $().ready(function () {
         success: function (data) {
             data = data['hits']['hits'];
             profs = removeDups($.map(data , function(x){ return x['_source']['Professors']}));
-            titles = $.map(data , function(x){ return x['_source']['title']});
+            titles = removeDups($.map(data , function(x){ return x['_source']['title']}));
         },
         error: function (e) {
             alert(JSON.stringify(e));
