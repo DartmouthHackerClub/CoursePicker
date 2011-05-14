@@ -338,7 +338,7 @@ function do_search() {
             if (form_params[key]['value'] == '1') {
                 distribs.push(form_params[key]['name'].substring(8));
             }
-        }  else {
+        }  else if(form_params[key]['value'] && form_params[key]['value'] != ''){
             i = {}; //hash needs to be built at runtime
             i[form_params[key]['name']] = form_params[key]['value'];
             queries.push({
