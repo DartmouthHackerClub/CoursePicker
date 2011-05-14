@@ -8,11 +8,13 @@
 		-->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 		<script type="text/javascript" src="dept_map.js"></script>
-      <script type="text/javascript" src="jquery.autocomplete.min.js"></script>
+        <script type="text/javascript" src="jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" type="text/css"  href="jquery-autocomplete/jquery.autocomplete.css" />
 
 		<script type="text/javascript" >
 var profs = null;
 var dept_abbrevs = null;
+var titles = null;
 var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
@@ -147,8 +149,8 @@ function show_results(results) {
         // Course guide link
         var deptnum = get_department_number(result['Department']);
         var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number='+result['Number']+'&prof=&action=selectcourses2&dept='+deptnum
-            var median_div = $('<span class="median"><span class="fieldname">course guide </span></span><span><a href="'+link+'">link</a></span>');
-        result_div.append(median_div);
+        var cglink_div = $('<span class="cglink"><span class="fieldname">course guide </span></span><span><a href="'+link+'">reviews</a></span>');
+        result_div.append(cglink_div);
 
 
         // Note
@@ -296,6 +298,10 @@ var search_options = {
         'long_name': 'Professor',
         'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
     },
+    'description': {
+        'long_name': 'Course Description',
+        'input_field': '<input type="text" name="description" id="description" value=""/>',
+    },
     'title': {
         'long_name': 'Title',
         'input_field': '<input type="text" name="title" id="title" value=""/>',
@@ -429,11 +435,19 @@ function add_search_row_if_we_need_one() {
     $('input[name="Professors"]').autocomplete(profs,
             {
                 matchContains: true,
-                autoFill: true
+                //autoFill: true,
+                selectFirst: false
+            });
+    $('input[name="title"]').autocomplete(titles,
+            {
+                matchContains: true,
+                //autoFill: true,
+                selectFirst: false
             });
     $('input[name="Department"]').autocomplete(dept_abbrevs,
             {
-            autoFill: true,
+                //autoFill: true,
+                selectFirst: false
             });
 }
 
@@ -478,7 +492,7 @@ function do_search() {
 
     queries = [];
     for (key in form_params) {
-        if (form_params[key]['name'] == 'Department') {
+        if (form_params[key]['name'] == 'Department' && form_params[key]['value'] != '') {
             var val = form_params[key]['value'];
             // resolve dept
             if (!dept_map[val]) {
@@ -492,6 +506,17 @@ function do_search() {
 
             i = {}; //hash needs to be built at runtime
             i['Department'] = val;
+            queries.push({
+                "field": i
+            });
+        }
+        else if (form_params[key]['name'] == 'description' && form_params[key]['value'] != '') {
+            var val = form_params[key]['value'];
+            splits = val.split(' ');
+            val = splits.join(' AND ');
+
+            i = {}; //hash needs to be built at runtime
+            i['description'] = val;
             queries.push({
                 "field": i
             });
@@ -592,6 +617,8 @@ $().ready(function () {
     search_params = {
         "size": 9000,
     };
+
+    // prof and title autocomplete
     $.ajax({
         dataType: "json",
         type: "POST",
@@ -600,16 +627,19 @@ $().ready(function () {
         success: function (data) {
             data = data['hits']['hits'];
             profs = removeDups($.map(data , function(x){ return x['_source']['Professors']}));
-            dept_abbrevs = []
-            for (key in dept_map) {
-                dept_abbrevs.push(key);
-                dept_abbrevs.push(dept_map[key]['name']);
-            }
+            titles = removeDups($.map(data , function(x){ return x['_source']['title']}));
         },
         error: function (e) {
             alert(JSON.stringify(e));
         }
     });
+
+    // department autocomplete
+    dept_abbrevs = []
+    for (key in dept_map) {
+        dept_abbrevs.push(key);
+        dept_abbrevs.push(dept_map[key]['name']);
+    }
         
     for (key in search_options) {
         search_options[key]['in_use'] = false;
