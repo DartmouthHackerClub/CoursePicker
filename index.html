@@ -172,6 +172,7 @@ function get_or_create_results_div() {
 }
 
 // TODO get with prof - we need to get historical course data too
+// TODO one request per result is silly - we need to cache medians or put them in course db
 function get_median(dept, num, dom) {
     $.ajax({
         url: 'http://hacktown.cs.dartmouth.edu/search/medians/medians/_search',
