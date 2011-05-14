@@ -297,6 +297,10 @@ var search_options = {
         'long_name': 'Professor',
         'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
     },
+    'description': {
+        'long_name': 'Course Description',
+        'input_field': '<input type="text" name="description" id="description" value=""/>',
+    },
     'title': {
         'long_name': 'Title',
         'input_field': '<input type="text" name="title" id="title" value=""/>',
@@ -498,6 +502,18 @@ function do_search() {
 
             i = {}; //hash needs to be built at runtime
             i['Department'] = val;
+            queries.push({
+                "field": i
+            });
+        }
+        else if (form_params[key]['name'] == 'description') {
+            var val = form_params[key]['value'];
+            splits = val.split(' ');
+            val = splits.join(' AND ');
+
+
+            i = {}; //hash needs to be built at runtime
+            i['description'] = val;
             queries.push({
                 "field": i
             });
