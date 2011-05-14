@@ -91,6 +91,12 @@ function show_results(results) {
         time = $('<span class="time"><span class="fieldname">period </span>' + result['period'] + '</span>');
         result_div.append(time);
 
+        // offered
+        if (result['offered']) {
+            offered = $('<span class="offered"><span class="fieldname">offered </span></span><span>' + result['offered'] + '</span>');
+            result_div.append(offered);
+        }
+
 		// Distribs
         distrib = $('<span class="distrib"><span class="fieldname">distrib </span></span>');
         if(result['dist'] && result['dist'].length > 0){
@@ -144,6 +150,20 @@ function show_results(results) {
             var median_div = $('<span class="median"><span class="fieldname">course guide </span></span><span><a href="'+link+'">link</a></span>');
         result_div.append(median_div);
 
+
+        // Note
+        if (result['note']) {
+            var note_div = $('<span class="note"><span class="fieldname">note </span></span><span>'+result['note']+'</span>');
+            result_div.append(note_div);
+        }
+
+
+        // Description
+        if (result['description']) {
+            var description_div = $('<span class="description"><span class="fieldname">description </span></span><span>'+result['description']+'</span>');
+            result_div.append(description_div);
+        }
+
         the_results_div.append(result_div);
     }
 }
@@ -183,7 +203,7 @@ function get_median(dept, num, dom) {
         success: function(data) {
             //we only want the juicy part of the data
             if (!data['hits'] || !data['hits']['hits']) {
-                dom.append('not available');
+                dom.append('<span class="notfound">not available</span>');
                 return;
             }
             data = data['hits']['hits'];
@@ -212,7 +232,7 @@ function get_median(dept, num, dom) {
                 dom.append(avg);
             }
             else {
-                dom.append('not available');
+                dom.append('<span class="notfound">not available</span>');
             }
         }
     });
