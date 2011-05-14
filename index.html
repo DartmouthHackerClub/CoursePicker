@@ -32,9 +32,9 @@ function show_results(results) {
             if (num_profs > 0) {
                 profs_div.append($(","));
             }
-            profs_div.append($(prof));
+            profs_div.append(prof);
         }
-        result_div.append(prof);
+        result_div.append(profs_div);
         time = $('<span class="time">' + result['period'] + '</span>');
         result_div.append(time);
         crn = $('<span class="crn">CRN:' + result['CRN'] + '</span>');
