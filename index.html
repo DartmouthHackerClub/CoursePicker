@@ -233,6 +233,7 @@ function make_left_side_dropdown() {
                 $(this).data('is_empty', true);
             }
         } else {
+            $(this).children('[value="null"]').hide();
             search_options[choice]['in_use'] = true;
             var right_side_html = search_options[choice]['input_field'];
             if ($(this).data('is_empty')) {
