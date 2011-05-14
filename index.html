@@ -241,9 +241,11 @@ function make_left_side_dropdown() {
                 $(this).data('is_empty', false);
             }
         }
+        if(!old_value){
+            $(this).parent().children('.close_row').show();
+        }
         if (old_value) {
             search_options[old_value]['in_use'] = false;
-
         }
         var right_side = $(this).parents('fieldset.search_row').find('.right_side')
         right_side.html(right_side_html);
@@ -284,6 +286,7 @@ function make_search_row_dom_element() {
     left_side = $(' <fieldset class="left_side"> </fieldset> ');
     close_link = $('<a href="#" class="close_row">X</a>');
     left_side.append(close_link);
+    close_link.hide();
     left_side.append(make_left_side_dropdown());
     right_side = $(' <fieldset class="right_side"></fieldset> ');
     row.append(left_side);

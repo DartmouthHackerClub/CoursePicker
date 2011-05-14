@@ -69,14 +69,17 @@ fieldset{
     display: inline-block;
     vertical-align: middle;
     height: 100%;
+    text-align: right;
 }
 .search_row .left_side select{
     width: 93%;
     overflow: hidden;
+    text-align: left;
 }
 .search_row .left_side .close_link{
     width: 7%;
     overflow: hidden;
+    text-align: left;
 }
 
 .search_row .right_side{
