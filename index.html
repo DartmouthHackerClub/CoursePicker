@@ -149,8 +149,8 @@ function show_results(results) {
         // Course guide link
         var deptnum = get_department_number(result['Department']);
         var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number='+result['Number']+'&prof=&action=selectcourses2&dept='+deptnum
-            var median_div = $('<span class="median"><span class="fieldname">course guide </span></span><span><a href="'+link+'">link</a></span>');
-        result_div.append(median_div);
+        var cglink_div = $('<span class="cglink"><span class="fieldname">course guide </span></span><span><a href="'+link+'">reviews</a></span>');
+        result_div.append(cglink_div);
 
 
         // Note
