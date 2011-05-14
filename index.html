@@ -11,6 +11,7 @@
 
 		<script type="text/javascript" >
 var profs = {};
+var dept_abbrevs = {};
 var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
@@ -335,6 +336,7 @@ function add_search_row_if_we_need_one() {
         left_side.parent().hide();
     });
     $('input[name="Professors"]').autocomplete(profs);
+    $('input[name="Department"]').autocomplete(dept_abbrevs);
 }
 
 function make_search_row_dom_element() {
@@ -460,18 +462,18 @@ function do_search() {
 $().ready(function () {
     search_params = {
         "size": 9000,
-        "fields" : ["Professors"],
     };
-    console.log(JSON.stringify(search_params));
     $.ajax({
         dataType: "json",
         type: "POST",
         url: query_url,
         data: JSON.stringify(search_params),
         success: function (data) {
-            profs = data['hits']['hits'];
-            profs = $.map(profs, function(prof){ return prof['fields']['Professors']})
-            console.log(profs);
+            data = data['hits']['hits'];
+            console.log(data);
+            profs = $.map(data , function(x){ return x['_source']['Professors']})
+            dept_abbrevs = $.map(data , function(x){ return x['_source']['names'][0]['Department']})
+            console.log(dept_abbrevs);
         },
         error: function (e) {
             alert(JSON.stringify(e));
