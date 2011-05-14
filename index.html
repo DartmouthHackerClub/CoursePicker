@@ -8,7 +8,8 @@
 		-->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 		<script type="text/javascript" src="dept_map.js"></script>
-      <script type="text/javascript" src="jquery.autocomplete.min.js"></script>
+        <script type="text/javascript" src="jquery-autocomplete/jquery.autocomplete.min.js"></script>
+		<link rel="stylesheet" type="text/css"  href="jquery-autocomplete/jquery.autocomplete.css" />
 
 		<script type="text/javascript" >
 var profs = null;
@@ -434,16 +435,16 @@ function add_search_row_if_we_need_one() {
     $('input[name="Professors"]').autocomplete(profs,
             {
                 matchContains: true,
-                autoFill: true
+                //autoFill: true
             });
     $('input[name="title"]').autocomplete(titles,
             {
                 matchContains: true,
-                autoFill: true
+                //autoFill: true
             });
     $('input[name="Department"]').autocomplete(dept_abbrevs,
             {
-                autoFill: true,
+                //autoFill: true,
             });
 }
 
