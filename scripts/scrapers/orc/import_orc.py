@@ -7,20 +7,25 @@ import sys
 import json
 from couchdb.schema import Document
 
-couch = couchdb.Server()
+BOOTSTRAP = False
 
-orc_data = json.loads(sys.stdin.readline())
+couch = couchdb.Server()
 
 courses = couch['courses']
 
-# only need to run this once
-for course_id in courses:
-    course = courses[course_id]
-    course['description'] = 'true'
-    course['meets'] = 'true'
-    courses[course_id] = course
+if BOOTSTRAP:
+    print 'Bootstrapping'
+    # only need to run this once
+    for course_id in courses:
+        course = courses[course_id]
+        course['description'] = ''
+        course['offered'] = ''
+        course['note'] = ''
+        courses[course_id] = course
 
-sys.exit(1)
+    sys.exit(1)
+
+orc_data = json.loads(sys.stdin.readline())
 
 def dept_query(dept):
     return "function(doc) {\
@@ -35,25 +40,20 @@ def course_query(dept, num):
           emit(doc._id, doc);}" % (dept, num)
 
 
-for no_orc in orc_data:
-    dept = no_orc['department']
-    nums = no_orc['courses']
-#    print dept, nums
-    if nums == 'all':
-        query_func = dept_query(dept)
-#        print query_func
-        for row in courses.query(query_func):
-#            print row.key, row.value
-            row.value['orc'] = 'false'
-            courses[row.key] = row.value
-#            print courses[row.key]
-        
-    else:
-        for num in nums:
-            query_func = course_query(dept, num)
-#            print query_func
-            for row in courses.query(query_func):
-#                print row.key, row.value
-                row.value['orc'] = 'false'
-                courses[row.key] = row.value
-#                print courses[row.key]
+for course in orc_data['courses']:
+    dept = course['subject']
+    try:
+        num = int(float((course['number'])))
+    except:
+        print 'Error on:'
+        print course
+        continue
+
+    note = course['note']
+    print 'Updating %s %s' % (dept, num)
+    query_func = course_query(dept, num)
+    for row in courses.query(query_func):
+        row.value['description'] = course['description'] if 'description' in course else ''
+        row.value['note'] = course['note'] if 'note' in course and course['note'] else ''
+        row.value['offered'] = course['offered'] if 'offered' in course else ''
+        courses[row.key] = row.value
