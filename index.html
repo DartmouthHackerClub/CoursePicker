@@ -170,7 +170,7 @@ function generate_input_field_time() {
     html += '<span style="font-size: .7em;">';
     for (key in times) {
         time = times[key];
-        html += '<input type="checkbox" name="period_' + time + '" value="1" />' + time;
+        html += '<input type="checkbox" name="period_' + time + '" id="period_' + time + '" value="1" /><label for="period_'+time+'">'+time+'</label>';
     }
     html += '&nbsp;&nbsp;&nbsp;';
     html += '<a href="#" class="check_all">(All)</a>';
@@ -186,7 +186,7 @@ function generate_input_field_distrib() {
     html += '<span style="font-size: .7em;">';
     for (key in distribs) {
         distrib = distribs[key];
-        html += '<input type="checkbox" name="distrib_' + distrib + '" value="1" />' + distrib;
+        html += '<input type="checkbox" name="distrib_' + distrib + '" id="distrib_' + distrib + '" value="1" /><label for="distrib_'+distrib+'">'+distrib+'</label>';
     }
     html += '&nbsp;&nbsp;&nbsp;';
     html += '<a href="#" class="check_all">(All)</a>';
