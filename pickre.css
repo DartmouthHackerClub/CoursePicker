@@ -167,6 +167,16 @@ fieldset{
 	font-style:italic;
 }
 
+/* error handling has different formatting than a single result*/
+.error_msg {
+	background-color:#aaa;
+	color:white;
+	font-weight:normal;
+	padding:10px;
+	border-radius:10px;
+}
+
+/* unused */
 .result .offering{
     margin-left: 10px;
 }
