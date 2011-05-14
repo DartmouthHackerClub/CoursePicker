@@ -13,6 +13,7 @@
 		<script type="text/javascript" >
 var profs = null;
 var dept_abbrevs = null;
+var titles = null;
 var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
@@ -431,9 +432,14 @@ function add_search_row_if_we_need_one() {
                 matchContains: true,
                 autoFill: true
             });
+    $('input[name="title"]').autocomplete(titles,
+            {
+                matchContains: true,
+                autoFill: true
+            });
     $('input[name="Department"]').autocomplete(dept_abbrevs,
             {
-            autoFill: true,
+                autoFill: true,
             });
 }
 
@@ -592,6 +598,8 @@ $().ready(function () {
     search_params = {
         "size": 9000,
     };
+
+    // prof and title autocomplete
     $.ajax({
         dataType: "json",
         type: "POST",
@@ -600,16 +608,19 @@ $().ready(function () {
         success: function (data) {
             data = data['hits']['hits'];
             profs = removeDups($.map(data , function(x){ return x['_source']['Professors']}));
-            dept_abbrevs = []
-            for (key in dept_map) {
-                dept_abbrevs.push(key);
-                dept_abbrevs.push(dept_map[key]['name']);
-            }
+            titles = $.map(data , function(x){ return x['_source']['title']});
         },
         error: function (e) {
             alert(JSON.stringify(e));
         }
     });
+
+    // department autocomplete
+    dept_abbrevs = []
+    for (key in dept_map) {
+        dept_abbrevs.push(key);
+        dept_abbrevs.push(dept_map[key]['name']);
+    }
         
     for (key in search_options) {
         search_options[key]['in_use'] = false;
