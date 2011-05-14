@@ -435,16 +435,19 @@ function add_search_row_if_we_need_one() {
     $('input[name="Professors"]').autocomplete(profs,
             {
                 matchContains: true,
-                //autoFill: true
+                //autoFill: true,
+                selectFirst: false
             });
     $('input[name="title"]').autocomplete(titles,
             {
                 matchContains: true,
-                //autoFill: true
+                //autoFill: true,
+                selectFirst: false
             });
     $('input[name="Department"]').autocomplete(dept_abbrevs,
             {
                 //autoFill: true,
+                selectFirst: false
             });
 }
 
