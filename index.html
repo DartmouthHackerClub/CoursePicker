@@ -59,7 +59,7 @@ function show_results(results) {
         // Course guide link
         var deptnum = get_department_number(result['Department']);
         var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number='+result['Number']+'&prof=&action=selectcourses2&dept='+deptnum
-        var cglink_div = $('<a class="cglink" href="'+link+'">read reviews</a>');
+        var cglink_div = $('<a class="cglink" href="'+link+'" target="_blank">read reviews</a>');
         result_div.append(cglink_div);
 
         // term
