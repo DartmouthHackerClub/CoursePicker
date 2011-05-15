@@ -607,7 +607,7 @@ $().ready(function () {
             }
         },
         error: function (e) {
-            alert(JSON.stringify(e));
+            console.log(JSON.stringify(e));
         }
     });
         
@@ -627,7 +627,7 @@ $().ready(function () {
     	try{
         	do_search();
         }catch(e){
-        	alert(e.message)
+        	console.log(e.message)
         }
         return false;
     });
