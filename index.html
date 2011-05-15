@@ -308,74 +308,6 @@ function generate_input_field_distrib() {
     return html;
 }
 
-var search_options = {
-    'Professors': {
-        'long_name': 'Professor',
-        'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
-    },
-    'title': {
-        'long_name': 'Title',
-        'input_field': '<input type="text" name="title" id="title" value=""/>',
-    },
-    'department': {
-        'long_name': 'Department',
-        'input_field': '<input type="text" name="Department" id="dept" value=""/>',
-    },
-    'Number': {
-        'long_name': 'Course Number',
-        'input_field': '<input type="text" name="Number" id="Number" value=""/>',
-    },
-    'description': {
-        'long_name': 'Course Description',
-        'input_field': '<input type="text" name="description" id="description" value=""/>',
-    },
-    'median_grade': {
-        'long_name': 'Average Median',
-        'input_field': ' \
-<select name="avg_median" > \
-<option value="4.00">A</option> \
-<option value="3.66">A- or higher</option> \
-<option value="3.33">B+ or higher</option> \
-<option value="3.0">B or higher</option> \
-<option value="2.66">B- or higher</option> \
-</select> \
-',
-    },
-    'time': {
-        'long_name': 'Meeting Time',
-        'input_field': generate_input_field_time(),
-    },
-    'term': {
-        'long_name': 'Quarter',
-        'input_field': generate_input_field_quarter(),
-    },
-    'dist': {
-        'long_name': 'Distrib',
-        'input_field': generate_input_field_distrib(),
-    },
-    'wc': {
-        'long_name': 'World Culture',
-        'input_field': '\
-<select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>',
-    },
-    'nro': {
-        'long_name': 'Can NRO?',
-        'input_field': '<input type="checkbox" name="nro" value="true" checked="checked"/>Heck Yeah',
-    },
-/*
-'enrollment_cap':  {
-'long_name' : 'Enrollment Cap',
-'input_field' : '<input type="text" name="" id="" value="" />',
-},
-*/
-    /*
-    'space_left': {
-        'long_name': 'Space Left?',
-        'input_field': '<input type="checkbox" checked="checked" />Heck Yeah',
-    },
-    */
-};
-
 function make_left_side_dropdown() {
     var dropdown = $('<select name="criteria"></select>');
     var first_option = $('<option value="null">---Choose Criteria---</option>');
@@ -695,10 +627,106 @@ function removeDups(arrVal) {
     return uniqueArr;
 }
 
+// implement JSON.stringify serialization for browsers that don't have
+JSON = {};
+JSON.stringify = JSON.stringify || function (obj) {
+    var t = typeof (obj);
+    if (t != "object" || obj === null) {
+        // simple data type
+        if (t == "string") obj = '"'+obj+'"';
+        return String(obj);
+    }
+    else {
+        // recurse array or object
+        var n, v, json = [], arr = (obj && obj.constructor == Array);
+        for (n in obj) {
+            v = obj[n]; t = typeof(v);
+            if (t == "string") v = '"'+v+'"';
+            else if (t == "object" && v !== null) v = JSON.stringify(v);
+            json.push((arr ? "" : '"' + n + '":') + String(v));
+        }
+        return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+    }
+};
+
+// search options
+var search_options = {
+    'Professors': {
+        'long_name': 'Professor',
+        'input_field': '<input type="text" name="Professors" id="Professors" value=""/>'
+    },
+    'title': {
+        'long_name': 'Title',
+        'input_field': '<input type="text" name="title" id="title" value=""/>'
+    },
+    'department': {
+        'long_name': 'Department',
+        'input_field': '<input type="text" name="Department" id="dept" value=""/>'
+    },
+    'Number': {
+        'long_name': 'Course Number',
+        'input_field': '<input type="text" name="Number" id="Number" value=""/>'
+    },
+    'description': {
+        'long_name': 'Course Description',
+        'input_field': '<input type="text" name="description" id="description" value=""/>'
+    },
+    'median_grade': {
+        'long_name': 'Average Median',
+        'input_field': ' \
+<select name="avg_median" > \
+<option value="4.00">A</option> \
+<option value="3.66">A- or higher</option> \
+<option value="3.33">B+ or higher</option> \
+<option value="3.0">B or higher</option> \
+<option value="2.66">B- or higher</option> \
+</select> \
+'
+    },
+    'time': {
+        'long_name': 'Meeting Time',
+        'input_field': generate_input_field_time()
+    },
+    'term': {
+        'long_name': 'Quarter',
+        'input_field': generate_input_field_quarter()
+    },
+    'dist': {
+        'long_name': 'Distrib',
+        'input_field': generate_input_field_distrib()
+    },
+    'wc': {
+        'long_name': 'World Culture',
+        'input_field': '\
+<select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>'
+    },
+    'nro': {
+        'long_name': 'Can NRO?',
+        'input_field': '<input type="checkbox" name="nro" value="true" checked="checked"/>Heck Yeah'
+    }
+/*
+'enrollment_cap':  {
+'long_name' : 'Enrollment Cap',
+'input_field' : '<input type="text" name="" id="" value="" />'
+},
+*/
+    /*
+    'space_left': {
+        'long_name': 'Space Left?',
+        'input_field': '<input type="checkbox" checked="checked" />Heck Yeah'
+    },
+    */
+};
+
 //RUN THIS STUFF AT PAGE LOAD
 $().ready(function () {
+    if($.browser.msie) {
+        $('#results_container').html('<h1><a href="http://getfirefox.com">Get Firefox</a> or <a href="http://google.com/chrome">Get Chrome</a></h1>');
+        alert("Course picker isn't written for Internet Explorer and may not work correctly.");
+    }
+
     search_params = {
-        "size": 9000,
+        "size": 9000
     };
 
     // prof and title autocomplete
@@ -754,6 +782,8 @@ $().ready(function () {
                 show_results(last_result);
             }
     });
+
+
 });
 </script>
 	</head>
