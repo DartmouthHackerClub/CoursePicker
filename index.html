@@ -760,14 +760,16 @@ $().ready(function () {
 				<form method="" action="" id="search_form">
 					<fieldset class="rows">
 					</fieldset>
+                    <fieldset id="sortby">
+                        Sort by: <input type="radio" id="sortby_course" name="sortby" value="course" checked> course
+                        <input type="radio" id="sortby_time" name="sortby" value="time"> time
+                        <input type="radio" id="sortby_median" name="sortby" value="median"> median
+                    </fieldset>
 					<input type="submit" value="Search &raquo;"/>
 				</form>
 			</div>
 
             <div>
-            Sort by: <input type="radio" id="sortby_course" name="sortby" value="course" checked> course
-            <input type="radio" id="sortby_time" name="sortby" value="time"> time
-            <input type="radio" id="sortby_median" name="sortby" value="median"> median
             <br><br>
             </div>
 
