@@ -464,6 +464,7 @@ function add_search_row_if_we_need_one() {
     $('input[name="Department"]').autocomplete(dept_abbrevs,
             {
                 //autoFill: true,
+                multiple: true,
                 selectFirst: false
             });
 }
@@ -510,19 +511,28 @@ function do_search() {
     queries = [];
     for (key in form_params) {
         if (form_params[key]['name'] == 'Department' && form_params[key]['value'] != '') {
-            var val = form_params[key]['value'];
-            // resolve dept
-            if (!dept_map[val]) {
-                //try to resolve it
-                for (key in dept_map) {
-                    if (dept_map[key]['name'].toLowerCase() == val.toLowerCase()) {
-                        val = key;
+            var vals = form_params[key]['value'].split(',');
+
+            depts = [];
+            for (var k in vals) {
+                var val = $.trim(vals[k]);
+                if (val == '') continue;
+
+                // resolve dept
+                if (!dept_map[val]) {
+                    //try to resolve it
+                    for (key in dept_map) {
+                        if (dept_map[key]['name'].toLowerCase() == val.toLowerCase()) {
+                            val = key;
+                            break;
+                        }
                     }
                 }
+                depts.push(val);
             }
 
             i = {}; //hash needs to be built at runtime
-            i['Department'] = val;
+            i['Department'] = depts.join(' OR ');
             queries.push({
                 "field": i
             });
