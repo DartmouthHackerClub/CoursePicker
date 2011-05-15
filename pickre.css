@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'ChunkFiveRegular';
-    src: url('font-face/Chunkfive/Chunkfive-webfont.eot');
-    src: url('font-face/Chunkfive/Chunkfive-webfont.eot?#iefix') format('embedded-opentype'),
-         url('font-face/Chunkfive/Chunkfive-webfont.woff') format('woff'),
-         url('font-face/Chunkfive/Chunkfive-webfont.ttf') format('truetype'),
-         url('font-face/Chunkfive/Chunkfive-webfont.svg#ChunkFiveRegular') format('svg');
+    src: url('font-face/ChunkFive/Chunkfive-webfont.eot');
+    src: url('font-face/ChunkFive/Chunkfive-webfont.eot?#iefix') format('embedded-opentype'),
+         url('font-face/ChunkFive/Chunkfive-webfont.woff') format('woff'),
+         url('font-face/ChunkFive/Chunkfive-webfont.ttf') format('truetype'),
+         url('font-face/ChunkFive/Chunkfive-webfont.svg#ChunkFiveRegular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -102,13 +102,29 @@ fieldset{
     width: 100%;
 }
 
-.criteria{
+.search_row a.close_row {
+	font-size: .8em;
 }
 
-.result{
-    width: 100%;
-    margin-bottom: 20px;
+.search_row a{
+    text-decoration: none;
+    font-family: arial 'courier new';
+    font-weight: bold;
+    vertical-align: middle;
+    margin: 0px 3px;
+    background-color:#aaa;
+    color:#ddd;
+    border: 0;
+    padding: 0 3px 0 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
 }
+.search_row a:hover{
+    background-color:#999;
+    color:white;
+}
+
 .result .dept_num{
     display: block;
     width: 100%;
@@ -142,6 +158,8 @@ fieldset{
 }
 
 .result {
+	width: 100%;
+	margin-bottom: 20px;
 	background-color:#262;
 	border-radius:10px;
 	color:white;
@@ -176,6 +194,29 @@ fieldset{
 	border-radius:10px;
 }
 
+.description,
+.note {
+	font-weight:normal;
+}
+
+.cglink{
+	color:white;
+	background-color:#055005;
+	font-style:italic;
+	font-weight:normal;
+	font-size:0.9em;
+	vertical-align:middle;
+	text-decoration:none;
+	display:block;
+	float:right;
+	padding:6px 7px;
+	margin:6px;
+	border-radius:3px;
+}
+.cglink:hover{
+    background-color:#3a3;
+}
+
 /* unused */
 .result .offering{
     margin-left: 10px;
@@ -191,23 +232,4 @@ fieldset{
 }
 .result .offering .crn{
     margin-left: 5px;
-}
-
-a.close_row{
-    text-decoration: none;
-    font-size: .8em;
-    vertical-align: middle;
-    margin: 2px;
-    color: red;
-    border: 1px solid gray;
-    font-family: courier new;
-    padding: 0 3px 0 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-a.close_row:hover{
-    background-color: gray;
-    border-color: red;
 }
