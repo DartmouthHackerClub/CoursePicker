@@ -236,4 +236,8 @@ fieldset{
 
 #disclaimer {
     margin-top: 15px;
+    color: #999;
+}
+#disclaimer a {
+    color: #999;
 }
