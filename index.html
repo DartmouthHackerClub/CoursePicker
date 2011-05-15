@@ -26,7 +26,67 @@ function show_error(e) {
     return true;
 }
 
+var last_result = null;     // used for re-sorting 
+var sortby = "course";
+function sort_results(data) {
+    var f;
+    switch(sortby) {
+        case "course":
+            f = function(a,b) {
+                var keya = a['Department'];
+                var keyb = b['Department'];
+                if (keya < keyb) {
+                    return -1;
+                }
+                else if (keya > keyb) {
+                    return 1;
+                }
+                else {
+                    return a['Number'] - b['Number'];
+                }
+            }
+            break;
+        case "time":
+            f = function(a,b) {
+
+                function score(period) {
+                    switch(period) {
+                        case '8': return 0;
+                        case '9': return 1;
+                        case '9L': return 1;
+                        case '9S': return 1;
+                        case '10': return 2;
+                        case '10A': return 2;
+                        case '11': return 3;
+                        case '12': return 4;
+                        case '2': return 5;
+                        case '2A': return 5;
+                        case '3A': return 6;
+                        case '3B': return 6;
+                    }
+                }
+                return score(a['period']) - score(b['period']);
+            }
+            break;
+        case "median":
+            // highest first
+            f = function(a,b) {
+                if (!a['avg_median'])
+                    return 1;
+                if (!b['avg_median'])
+                    return -1;
+                return b['avg_median'] - a['avg_median'];
+            }
+            break;
+
+        default: alert('invalid sorting id, something went wrong');
+    }
+    return data.sort(f);
+}
+
 function show_results(results) {
+    results = sort_results(results);
+
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
     if(!results || results == '' || results == {}){
@@ -65,7 +125,6 @@ function show_results(results) {
         // term
         term = $('<span class="term"><span class="fieldname">term </span>' + result['term'] + ' ' + result['year'] + '</span>');
         result_div.append(term);
-
 
         // profs
         profs_div = $('<span class="profs"></span>');
@@ -170,6 +229,7 @@ function show_results(results) {
 
         the_results_div.append(result_div);
     }
+    last_result = results;
 }
 
 // course guide defines depts by number
@@ -606,19 +666,6 @@ function do_search() {
                 data[key]['Number'] = data[key]["names"][0]["Number"];
                 data[key]['Section'] = data[key]["names"][0]["Section"];
             }
-            data.sort(function(a,b) {
-                var keya = a['Department'];
-                var keyb = b['Department'];
-                if (keya < keyb) {
-                    return -1;
-                }
-                else if (keya > keyb) {
-                    return 1;
-                }
-                else {
-                    return a['Number'] - b['Number'];
-                }
-            });
             show_results(data);
         },
         error: function (e) {
@@ -689,7 +736,14 @@ $().ready(function () {
     });
 
 
-
+    // bind sort by preferences
+    $("input:radio[name=sortby]").click(function() {
+            sortby = $(this).val();
+            if (last_result) {
+                $('#results_container').html('Loading...');
+                show_results(last_result);
+            }
+    });
 });
 </script>
 	</head>
@@ -709,6 +763,12 @@ $().ready(function () {
 					<input type="submit" value="Search &raquo;"/>
 				</form>
 			</div>
+
+            <div>
+            Sort by: <input type="radio" id="sortby_course" name="sortby" value="course" checked> course
+            <input type="radio" id="sortby_time" name="sortby" value="time"> time
+            <input type="radio" id="sortby_median" name="sortby" value="median"> median
+            </div>
 
 			<div id="results_container">
 			</div>
