@@ -1,30 +1,33 @@
 #!/usr/bin/python
 
-# takes json median info from stdin and loads into courses table
+#
+# takes median json info from stdin and loads into courses
+# this should be run every term
+#
 
 import couchdb
 import sys
 import json
-import course
+import urllib
 from couchdb.schema import Document
+
+BOOTSTRAP = False
 
 couch = couchdb.Server()
 
-nro_data = json.loads(sys.stdin.readline())
-
 courses = couch['courses']
+medians = couch['medians']
 
-# only need to run this once
-#for course_id in courses:
-#    course = courses[course_id]
-#    course['median'] = 'true'
-#    courses[course_id] = course
+if BOOTSTRAP:
+    print 'Bootstrapping...'
+    # only need to run this once
+    for course_id in courses:
+        course = courses[course_id]
+        course['avg_median'] = ''
+        courses[course_id] = course
+    sys.exit(1)
 
-def dept_query(dept):
-    return "function(doc) {\
-    for (var i in doc.names)\
-        if (doc.names[i].Department == '%s')\
-          emit(doc._id, doc);}" % dept
+median_data = json.loads(sys.stdin.readline())['records']
 
 def course_query(dept, num):
     return "function(doc) {\
@@ -33,25 +36,66 @@ def course_query(dept, num):
           emit(doc._id, doc);}" % (dept, num)
 
 
-for no_nro in nro_data:
-    dept = no_nro['department']
-    nums = no_nro['courses']
-#    print dept, nums
-    if nums == 'all':
-        query_func = dept_query(dept)
-#        print query_func
-        for row in courses.query(query_func):
-#            print row.key, row.value
-            row.value['nro'] = 'false'
-            courses[row.key] = row.value
-#            print courses[row.key]
-        
-    else:
-        for num in nums:
-            query_func = course_query(dept, num)
-#            print query_func
-            for row in courses.query(query_func):
-#                print row.key, row.value
-                row.value['nro'] = 'false'
-                courses[row.key] = row.value
-#                print courses[row.key]
+def median_query(dept, num):
+    return "function(doc) {\
+        if (doc.dept == '%s' && doc.number == '%03d')\
+          emit(doc._id, doc);}" % (dept, num)
+
+def avg_median(dept, num):
+    query_func = median_query(dept, num)
+
+    total = 0.0
+    num = 0
+    for row in medians.query(query_func):
+        val = row.value['median']
+        if val == 'A': total+=4.0
+        elif val == 'A-': total+=3.66
+        elif val == 'B+': total+=3.33
+        elif val == 'B': total+=3.0
+        elif val == 'B-': total+=2.66
+        elif val == 'C+': total+=2.33
+        elif val == 'C': total+=2
+        elif val == 'C-': total+=1.66
+        else: continue
+        num += 1
+
+    if num == 0:
+        return None
+    return (total/num)
+
+
+ok = False
+c = 0
+total = len(median_data)
+# classes show up possibly multiple times per term, usually at least once per year.
+# cache so we only need to calculate average median once
+cache = {}
+for course in median_data:
+    c += 1
+    dept = course['dept']
+    try:
+        num = int(float((course['number'])))
+    except:
+        print 'Error on:'
+        print course
+        continue
+
+    """
+    if c == 3122:
+        ok = True
+    if not ok:
+        continue
+        """
+
+    key = dept + ':' + str(num)
+
+    print '(%d/%d) Finding avg median for %s %s' % (c, total, dept, num)
+    if not key in cache:
+        cache[key] = avg_median(dept, num)
+
+    avg = cache[key]
+    print '(%d/%d) Updating %s %s with median "%s"' % (c, total, dept, num, avg if avg else 'n/a')
+    query_func = course_query(dept, num)
+    for row in courses.query(query_func):
+        row.value['avg_median'] = avg if avg else ''
+        courses[row.key] = row.value

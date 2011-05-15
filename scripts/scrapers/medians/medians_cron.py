@@ -5,9 +5,7 @@
 
 import couchdb
 import medians
-
-COUCHDB_USER = 'mediancrawler'
-COUCHDB_PASS = 'veQu6moh'
+import sys
 
 records = medians.load()
 
@@ -19,5 +17,5 @@ if 'medians' in couch:
 db = couch.create('medians')
 
 # Populate with a document per record
-print 'Populating median records...'
+print 'Populating',len(records),'median records...'
 db.update(records)
