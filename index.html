@@ -17,7 +17,7 @@ var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
 function show_error(e) {
-    console.log(e);
+    //console.log(e);
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
     result_div = $('<div class="error_msg"><h3>OH NOES! AN ERROR!</h3><h4>Shield Your Eyes:</h4><div>');
@@ -657,7 +657,7 @@ function do_search() {
         "size": 9000,
         "query": {"bool": { "must":  queries}}
     };
-    console.log(JSON.stringify(search_params));
+    //console.log(JSON.stringify(search_params));
     $('#results_container').html('<h1>Loading...</h1>');
     $.ajax({
         dataType: "json",
@@ -713,7 +713,7 @@ $().ready(function () {
             titles = removeDups($.map(data , function(x){ return x['_source']['title']}));
         },
         error: function (e) {
-            console.log(JSON.stringify(e));
+            //console.log(JSON.stringify(e));
         }
     });
 
@@ -740,7 +740,7 @@ $().ready(function () {
     	try{
         	do_search();
         }catch(e){
-        	console.log(e.message)
+        	//console.log(e.message)
         }
         return false;
     });
