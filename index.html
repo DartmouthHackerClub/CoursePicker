@@ -93,7 +93,7 @@ function show_results(results) {
 
         // offered
         if (result['offered']) {
-            offered = $('<span class="offered"><span class="fieldname">offered </span></span><span>' + result['offered'] + '</span>');
+            offered = $('<span class="offered"><span class="fieldname">offered </span>' + result['offered'] + '</span>');
             result_div.append(offered);
         }
 
@@ -147,7 +147,7 @@ function show_results(results) {
         // Course guide link
         var deptnum = get_department_number(result['Department']);
         var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number='+result['Number']+'&prof=&action=selectcourses2&dept='+deptnum
-        var cglink_div = $('<span class="cglink"><span class="fieldname">course guide </span></span><span><a href="'+link+'">reviews</a></span>');
+        var cglink_div = $('<span class="cglink"><span class="fieldname">course guide </span><a href="'+link+'">reviews</a></span>');
         result_div.append(cglink_div);
 
 
@@ -160,7 +160,7 @@ function show_results(results) {
 
         // Description
         if (result['description']) {
-            var description_div = $('<span class="description"><span class="fieldname">description </span></span><span>'+result['description']+'</span>');
+            var description_div = $('<span class="description"><span class="fieldname">description </span>'+result['description']+'</span>');
             result_div.append(description_div);
         }
 
