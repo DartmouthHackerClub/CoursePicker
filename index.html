@@ -144,10 +144,16 @@ function show_results(results) {
         result_div.append(nro);
 
         // Median
-        var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>');
+        var med;
+        if (result['avg_median']) {
+            var avg = result['avg_median'].toFixed(2);
+            med = '<span>' + avg + '</span>';
+        }
+        else {
+            med = '<span class="notfound">not available</span>';
+        }
+        var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>' + med);
         result_div.append(median_div);
-        get_median(result['Department'], result['Number'], median_div);
-
 
         // Note
         if (result['note']) {
@@ -187,53 +193,6 @@ function get_or_create_results_div() {
     }
     $('#results_container').html(results_div);
     return results_div;
-}
-
-// TODO get with prof - we need to get historical course data too
-// TODO one request per result is silly - we need to cache medians or put them in course db
-function get_median(dept, num, dom) {
-    $.ajax({
-        url: 'http://hacktown.cs.dartmouth.edu/search/medians/medians/_search',
-        dataType: 'json',
-        data: {
-            'q': 'dept:'+dept+' AND number:'+num
-        },
-        success: function(data) {
-            //we only want the juicy part of the data
-            if (!data['hits'] || !data['hits']['hits']) {
-                dom.append('<span class="notfound">not available</span>');
-                return;
-            }
-            data = data['hits']['hits'];
-            // now average the median
-            var total = 0.0;
-            var num = 0;
-            for (key in data) {
-                if (!data[key]["_source"]) {
-                    continue;
-                }
-                switch (data[key]['_source']['median']) {
-                    case "A": total+=4.0;break;
-                    case "A-": total+=3.66;break;
-                    case "B+": total+=3.33;break;
-                    case "B": total+=3.0;break;
-                    case "B-": total+=2.66;break;
-                    case "C+": total+=2.33;break;
-                    case "C": total+=2.0;break;
-                    case "C-": total+=1.66;break;
-                    default: continue;
-                }
-                num++;
-            }
-            if (num > 0) {
-                var avg = (total/num).toFixed(2);
-                dom.append(avg);
-            }
-            else {
-                dom.append('<span class="notfound">not available</span>');
-            }
-        }
-    });
 }
 
 function generate_input_field_quarter() {
@@ -310,6 +269,18 @@ var search_options = {
         'long_name': 'Course Description',
         'input_field': '<input type="text" name="description" id="description" value=""/>',
     },
+    'median_grade': {
+        'long_name': 'Average Median',
+        'input_field': ' \
+<select name="avg_median" > \
+<option value="4.00">A</option> \
+<option value="3.66">A- or higher</option> \
+<option value="3.33">B+ or higher</option> \
+<option value="3.0">B or higher</option> \
+<option value="2.66">B- or higher</option> \
+</select> \
+',
+    },
     'time': {
         'long_name': 'Meeting Time',
         'input_field': generate_input_field_time(),
@@ -327,20 +298,6 @@ var search_options = {
         'input_field': '\
 <select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>',
     },
-    /*
-    'median_grade': {
-        'long_name': 'Median Grade',
-        'input_field': ' \
-<select name="median_grade" > \
-<option value=">=A">A</option> \
-<option value=">=A-">A- or higher</option> \
-<option value=">=B+">B+ or higher</option> \
-<option value=">=B">B or higher</option> \
-<option value=">=B-">B- or higher</option> \
-</select> \
-',
-    },
-    */
     'nro': {
         'long_name': 'Can NRO?',
         'input_field': '<input type="checkbox" name="nro" value="true" checked="checked"/>Heck Yeah',
@@ -573,6 +530,20 @@ function do_search() {
             i['Number'] = pad;
             queries.push({
                 "field": i
+            });
+        }
+        else if (form_params[key]['name'] == 'avg_median' && form_params[key]['value'] != '') {
+            var val = parseFloat(form_params[key]['value']);
+            i = {}; //hash needs to be built at runtime
+            i['avg_median'] = pad;
+            // http://www.elasticsearch.org/guide/reference/query-dsl/range-query.html
+            queries.push({
+                    "range": {
+                        "avg_median": {
+                            "from": val,
+                            "to": 5
+                        }
+                    }
             });
         }
         else if (form_params[key]['name'] == 'criteria') {
