@@ -194,6 +194,29 @@ fieldset{
 	border-radius:10px;
 }
 
+.description,
+.note {
+	font-weight:normal;
+}
+
+.cglink{
+	color:white;
+	background-color:#055005;
+	font-style:italic;
+	font-weight:normal;
+	font-size:0.9em;
+	vertical-align:middle;
+	text-decoration:none;
+	display:block;
+	float:right;
+	padding:6px 7px;
+	margin:6px;
+	border-radius:3px;
+}
+.cglink:hover{
+    background-color:#3a3;
+}
+
 /* unused */
 .result .offering{
     margin-left: 10px;

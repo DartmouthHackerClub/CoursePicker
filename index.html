@@ -50,12 +50,17 @@ function show_results(results) {
         result_div = $('<div class="result"></div>');
 
         // title
-        dept_num = $('<span class="dept_num_title">' + result['Department'] + ' ' + result['Number'] + ': ' + result['title'] + '</span>');
-        result_div.append(dept_num);
-
+        title = $('<span class="dept_num_title">' + result['Department'] + ' ' + result['Number'] + ': ' + result['title'] + '</span>');
         // crn
         crn = $('<span class="crn">CRN ' + result['CRN'] + '</span>');
-        result_div.append(crn);
+        title.append(crn);
+        result_div.append(title);
+
+        // Course guide link
+        var deptnum = get_department_number(result['Department']);
+        var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number='+result['Number']+'&prof=&action=selectcourses2&dept='+deptnum
+        var cglink_div = $('<a class="cglink" href="'+link+'">read reviews</a>');
+        result_div.append(cglink_div);
 
         // term
         term = $('<span class="term"><span class="fieldname">term </span>' + result['term'] + ' ' + result['year'] + '</span>');
@@ -142,13 +147,6 @@ function show_results(results) {
         var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>');
         result_div.append(median_div);
         get_median(result['Department'], result['Number'], median_div);
-
-
-        // Course guide link
-        var deptnum = get_department_number(result['Department']);
-        var link = 'http://hacktown.cs.dartmouth.edu/gudru/index.php?become=view&year=&term=&number='+result['Number']+'&prof=&action=selectcourses2&dept='+deptnum
-        var cglink_div = $('<span class="cglink"><span class="fieldname">course guide </span><a href="'+link+'">reviews</a></span>');
-        result_div.append(cglink_div);
 
 
         // Note
