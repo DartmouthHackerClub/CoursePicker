@@ -737,7 +737,7 @@ $().ready(function () {
 
 
     // bind sort by preferences
-    $("input:radio[name=sortby]").click(function() {
+    $("input:radio[name=sortby]").change(function() {
             sortby = $(this).val();
             if (last_result) {
                 $('#results_container').html('Loading...');
