@@ -233,9 +233,3 @@ fieldset{
 .result .offering .crn{
     margin-left: 5px;
 }
-
-#sortby {
-    display: inline-block;
-    float: left;
-    margin-left: 22px;
-}
