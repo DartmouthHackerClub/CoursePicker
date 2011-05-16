@@ -142,7 +142,8 @@ function show_results(results) {
                     html += ', ';
                 }
                 first = false;
-                html += result['Professors'][key];
+		var prof = result['Professors'][key];
+                html += "<a href='http://dartwiki.org/w/" + prof.replace(' ', '_') + "'>" + prof + "</a>"
             }
             profs_div.append(html);
         }
