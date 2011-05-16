@@ -203,15 +203,14 @@ function show_results(results) {
         result_div.append(nro);
 
         // Median
-        var med;
+        var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>');
         if (result['avg_median']) {
             var avg = result['avg_median'].toFixed(2);
-            med = '<span>' + avg + '</span>';
+            median_div.append($('<span>' + avg + '</span>'));
         }
         else {
-            med = '<span class="notfound">not available</span>';
+            median_div.append($('<span class="notfound">not available</span>'));
         }
-        var median_div = $('<span class="median"><span class="fieldname">avg median </span></span>' + med);
         result_div.append(median_div);
 
         // Note
