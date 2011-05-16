@@ -234,8 +234,10 @@ fieldset{
     margin-left: 5px;
 }
 
-#sortby {
-    display: inline-block;
-    float: left;
-    margin-left: 22px;
+#disclaimer {
+    margin-top: 15px;
+    color: #999;
+}
+#disclaimer a {
+    color: #999;
 }

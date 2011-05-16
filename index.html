@@ -17,7 +17,7 @@ var empty_rows = 0;
 var query_url = 'http://hacktown.cs.dartmouth.edu/search/courses/courses/_search';
 
 function show_error(e) {
-    console.log(e);
+    //console.log(e);
     the_results_div = get_or_create_results_div().find('#the_results');
     the_results_div.empty();
     result_div = $('<div class="error_msg"><h3>OH NOES! AN ERROR!</h3><h4>Shield Your Eyes:</h4><div>');
@@ -142,7 +142,8 @@ function show_results(results) {
                     html += ', ';
                 }
                 first = false;
-                html += result['Professors'][key];
+		var prof = result['Professors'][key];
+                html += "<a href='http://dartwiki.org/w/" + prof.replace(' ', '_') + "'>" + prof + "</a>"
             }
             profs_div.append(html);
         }
@@ -307,74 +308,6 @@ function generate_input_field_distrib() {
     return html;
 }
 
-var search_options = {
-    'Professors': {
-        'long_name': 'Professor',
-        'input_field': '<input type="text" name="Professors" id="Professors" value=""/>',
-    },
-    'title': {
-        'long_name': 'Title',
-        'input_field': '<input type="text" name="title" id="title" value=""/>',
-    },
-    'department': {
-        'long_name': 'Department',
-        'input_field': '<input type="text" name="Department" id="dept" value=""/>',
-    },
-    'Number': {
-        'long_name': 'Course Number',
-        'input_field': '<input type="text" name="Number" id="Number" value=""/>',
-    },
-    'description': {
-        'long_name': 'Course Description',
-        'input_field': '<input type="text" name="description" id="description" value=""/>',
-    },
-    'median_grade': {
-        'long_name': 'Average Median',
-        'input_field': ' \
-<select name="avg_median" > \
-<option value="4.00">A</option> \
-<option value="3.66">A- or higher</option> \
-<option value="3.33">B+ or higher</option> \
-<option value="3.0">B or higher</option> \
-<option value="2.66">B- or higher</option> \
-</select> \
-',
-    },
-    'time': {
-        'long_name': 'Meeting Time',
-        'input_field': generate_input_field_time(),
-    },
-    'term': {
-        'long_name': 'Quarter',
-        'input_field': generate_input_field_quarter(),
-    },
-    'dist': {
-        'long_name': 'Distrib',
-        'input_field': generate_input_field_distrib(),
-    },
-    'wc': {
-        'long_name': 'World Culture',
-        'input_field': '\
-<select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>',
-    },
-    'nro': {
-        'long_name': 'Can NRO?',
-        'input_field': '<input type="checkbox" name="nro" value="true" checked="checked"/>Heck Yeah',
-    },
-/*
-'enrollment_cap':  {
-'long_name' : 'Enrollment Cap',
-'input_field' : '<input type="text" name="" id="" value="" />',
-},
-*/
-    /*
-    'space_left': {
-        'long_name': 'Space Left?',
-        'input_field': '<input type="checkbox" checked="checked" />Heck Yeah',
-    },
-    */
-};
-
 function make_left_side_dropdown() {
     var dropdown = $('<select name="criteria"></select>');
     var first_option = $('<option value="null">---Choose Criteria---</option>');
@@ -463,6 +396,7 @@ function add_search_row_if_we_need_one() {
     $('input[name="Department"]').autocomplete(dept_abbrevs,
             {
                 //autoFill: true,
+                multiple: true,
                 selectFirst: false
             });
 }
@@ -509,19 +443,28 @@ function do_search() {
     queries = [];
     for (key in form_params) {
         if (form_params[key]['name'] == 'Department' && form_params[key]['value'] != '') {
-            var val = form_params[key]['value'];
-            // resolve dept
-            if (!dept_map[val]) {
-                //try to resolve it
-                for (key in dept_map) {
-                    if (dept_map[key]['name'].toLowerCase() == val.toLowerCase()) {
-                        val = key;
+            var vals = form_params[key]['value'].split(',');
+
+            depts = [];
+            for (var k in vals) {
+                var val = $.trim(vals[k]);
+                if (val == '') continue;
+
+                // resolve dept
+                if (!dept_map[val]) {
+                    //try to resolve it
+                    for (key in dept_map) {
+                        if (dept_map[key]['name'].toLowerCase() == val.toLowerCase()) {
+                            val = key;
+                            break;
+                        }
                     }
                 }
+                depts.push(val);
             }
 
             i = {}; //hash needs to be built at runtime
-            i['Department'] = val;
+            i['Department'] = depts.join(' OR ');
             queries.push({
                 "field": i
             });
@@ -646,7 +589,7 @@ function do_search() {
         "size": 9000,
         "query": {"bool": { "must":  queries}}
     };
-    console.log(JSON.stringify(search_params));
+    //console.log(JSON.stringify(search_params));
     $('#results_container').html('<h1>Loading...</h1>');
     $.ajax({
         dataType: "json",
@@ -684,10 +627,106 @@ function removeDups(arrVal) {
     return uniqueArr;
 }
 
+// implement JSON.stringify serialization for browsers that don't have
+JSON = {};
+JSON.stringify = JSON.stringify || function (obj) {
+    var t = typeof (obj);
+    if (t != "object" || obj === null) {
+        // simple data type
+        if (t == "string") obj = '"'+obj+'"';
+        return String(obj);
+    }
+    else {
+        // recurse array or object
+        var n, v, json = [], arr = (obj && obj.constructor == Array);
+        for (n in obj) {
+            v = obj[n]; t = typeof(v);
+            if (t == "string") v = '"'+v+'"';
+            else if (t == "object" && v !== null) v = JSON.stringify(v);
+            json.push((arr ? "" : '"' + n + '":') + String(v));
+        }
+        return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+    }
+};
+
+// search options
+var search_options = {
+    'Professors': {
+        'long_name': 'Professor',
+        'input_field': '<input type="text" name="Professors" id="Professors" value=""/>'
+    },
+    'title': {
+        'long_name': 'Title',
+        'input_field': '<input type="text" name="title" id="title" value=""/>'
+    },
+    'department': {
+        'long_name': 'Department',
+        'input_field': '<input type="text" name="Department" id="dept" value=""/>'
+    },
+    'Number': {
+        'long_name': 'Course Number',
+        'input_field': '<input type="text" name="Number" id="Number" value=""/>'
+    },
+    'description': {
+        'long_name': 'Course Description',
+        'input_field': '<input type="text" name="description" id="description" value=""/>'
+    },
+    'median_grade': {
+        'long_name': 'Average Median',
+        'input_field': ' \
+<select name="avg_median" > \
+<option value="4.00">A</option> \
+<option value="3.66">A- or higher</option> \
+<option value="3.33" selected>B+ or higher</option> \
+<option value="3.0">B or higher</option> \
+<option value="2.66">B- or higher</option> \
+</select> \
+'
+    },
+    'time': {
+        'long_name': 'Meeting Time',
+        'input_field': generate_input_field_time()
+    },
+    'term': {
+        'long_name': 'Quarter',
+        'input_field': generate_input_field_quarter()
+    },
+    'dist': {
+        'long_name': 'Distrib',
+        'input_field': generate_input_field_distrib()
+    },
+    'wc': {
+        'long_name': 'World Culture',
+        'input_field': '\
+<select name="wc"><option value="W">W</option><option value="NW">NW</option><option value="CI">CI</option></select>'
+    },
+    'nro': {
+        'long_name': 'Can NRO?',
+        'input_field': '<input type="checkbox" name="nro" value="true" checked="checked"/>Heck Yeah'
+    }
+/*
+'enrollment_cap':  {
+'long_name' : 'Enrollment Cap',
+'input_field' : '<input type="text" name="" id="" value="" />'
+},
+*/
+    /*
+    'space_left': {
+        'long_name': 'Space Left?',
+        'input_field': '<input type="checkbox" checked="checked" />Heck Yeah'
+    },
+    */
+};
+
 //RUN THIS STUFF AT PAGE LOAD
 $().ready(function () {
+    if($.browser.msie) {
+        $('#results_container').html('<h1><a href="http://getfirefox.com">Get Firefox</a> or <a href="http://google.com/chrome">Get Chrome</a></h1>');
+        alert("Course picker isn't written for Internet Explorer and may not work correctly.");
+    }
+
     search_params = {
-        "size": 9000,
+        "size": 9000
     };
 
     // prof and title autocomplete
@@ -702,7 +741,7 @@ $().ready(function () {
             titles = removeDups($.map(data , function(x){ return x['_source']['title']}));
         },
         error: function (e) {
-            console.log(JSON.stringify(e));
+            //console.log(JSON.stringify(e));
         }
     });
 
@@ -729,7 +768,7 @@ $().ready(function () {
     	try{
         	do_search();
         }catch(e){
-        	console.log(e.message)
+        	//console.log(e.message)
         }
         return false;
     });
@@ -743,13 +782,29 @@ $().ready(function () {
                 show_results(last_result);
             }
     });
+
+
 });
+</script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23367713-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
 </script>
 	</head>
 	<body>
 		<div id="header">
 			<a id="logo" href="http://hacktown.cs.dartmouth.edu">
-				<img src="assets/pickr_logo.png"/>
+				<img src="assets/pickr_logo.png" border="0"/>
 			</a>
 		</div>
 		<div id="content">
@@ -759,16 +814,14 @@ $().ready(function () {
 				<form method="" action="" id="search_form">
 					<fieldset class="rows">
 					</fieldset>
-                    <fieldset id="sortby">
-                        Sort by: <input type="radio" id="sortby_course" name="sortby" value="course" checked> course
-                        <input type="radio" id="sortby_time" name="sortby" value="time"> time
-                        <input type="radio" id="sortby_median" name="sortby" value="median"> median
-                    </fieldset>
 					<input type="submit" value="Search &raquo;"/>
 				</form>
 			</div>
 
             <div>
+                Sort by: <input type="radio" id="sortby_course" name="sortby" value="course" checked> <label for="sortby_course">course</label>
+                <input type="radio" id="sortby_time" name="sortby" value="time"> <label for="sortby_time">time</label>
+                <input type="radio" id="sortby_median" name="sortby" value="median"> <label for="sortby_median">median</label>
             <br><br>
             </div>
 
@@ -783,6 +836,9 @@ $().ready(function () {
 
 			</div>
 			-->
+            <div id="disclaimer">
+            This app is a work in progress.  Please email <a href="mailto:hackerclub-core@googlegroups.com">hackerclub-core@googlegroups.com</a> with suggestions and feedback.
+            </div>
 		</div>
 	</body>
 </html>
