@@ -234,10 +234,29 @@ fieldset{
     margin-left: 5px;
 }
 
+.result span a{
+	color:#4c4;
+	text-decoration:none;
+}
+.result span a:visited{
+	color:#3a3;
+}
+.result span a:hover{
+	color:#33e033;
+}
+.result span a:active{
+	color:#1e1;
+}
+
 #disclaimer {
     margin-top: 15px;
     color: #999;
 }
 #disclaimer a {
     color: #999;
+
+#sortby {
+    display: inline-block;
+    float: left;
+    margin-left: 22px;
 }
