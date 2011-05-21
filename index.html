@@ -226,6 +226,10 @@ function show_results(results) {
             var description_div = $('<span class="description"><span class="fieldname">description </span>'+result['description']+'</span>');
             result_div.append(description_div);
         }
+        var dept_orc_div = $('<span class="dept_orc"><span class="fieldname">dept ORC</span><a href="http://www.dartmouth.edu/~reg/courses/desc/'+result['Department']+'.html">link</a<</span>');
+        result_div.append(dept_orc_div);
+        
+http://www.dartmouth.edu/~reg/courses/desc
 
         the_results_div.append(result_div);
     }
