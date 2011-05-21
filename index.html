@@ -236,7 +236,7 @@ function show_results(results) {
 
         // Description
         if (result['description']) {
-            var description_div = $('<span class="description"><span class="fieldname">description </span>'+result['description']+'</span>');
+            var description_div = $('<span class="description"><span class="fieldname">description </span>'+ result['description'].replace(/\n/g, '<br />') +'</span>');
             result_div.append(description_div);
         }
 
