@@ -3,6 +3,10 @@ a img{
 
 }
 
+.result h4 {
+    margin: 5px 10px 3px 10px;
+}
+
 @font-face {
     font-family: 'ChunkFiveRegular';
     src: url('font-face/ChunkFive/Chunkfive-webfont.eot');
@@ -239,7 +243,7 @@ fieldset{
     margin-left: 5px;
 }
 
-.result span a{
+.result a{
 	color:#4c4;
 	text-decoration:none;
 }

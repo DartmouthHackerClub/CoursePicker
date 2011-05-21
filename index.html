@@ -156,11 +156,6 @@ function show_results(results) {
         time = $('<span class="time"><span class="fieldname">period </span>' + result['period'] + '</span>');
         result_div.append(time);
 
-        // offered
-        if (result['offered']) {
-            offered = $('<span class="offered"><span class="fieldname">offered </span>' + result['offered'] + '</span>');
-            result_div.append(offered);
-        }
 
 		// Distribs
         distrib = $('<span class="distrib"><span class="fieldname">distrib </span></span>');
@@ -214,23 +209,39 @@ function show_results(results) {
         }
         result_div.append(median_div);
 
+
+        //ORC STUFF
+        // Header
+        if (result['note'] || result['offered'] || result['description']) {
+            var orc_header_div = $('<h4>From the <a href="http://www.dartmouth.edu/ ~reg/courses/desc/' + result['Description'] + '"> ' + result['Department'] + ' ORC</a> <small>(may be out of date)</small></h4>:');
+        result_div.append(orc_header_div);
+        }
+        // Link to ORC
+        else{
+        var dept_orc_div = $('<span class="dept_orc"><span class="fieldname">dept ORC</span><a href="http://www.dartmouth.edu/~reg/courses/desc/'+result['Department']+'.html">' + result['Department'] + ' ORC</a<</span>');
+        result_div.append(dept_orc_div);
+        }
+
         // Note
         if (result['note']) {
             var note_div = $('<span class="note"><span class="fieldname">note </span>'+result['note']+'</span>');
             result_div.append(note_div);
         }
 
+        // offered
+        if (result['offered']) {
+            offered = $('<span class="offered"><span class="fieldname">offered </span>' + result['offered'] + '</span>');
+            result_div.append(offered);
+        }
 
         // Description
         if (result['description']) {
             var description_div = $('<span class="description"><span class="fieldname">description </span>'+result['description']+'</span>');
             result_div.append(description_div);
         }
-        var dept_orc_div = $('<span class="dept_orc"><span class="fieldname">dept ORC</span><a href="http://www.dartmouth.edu/~reg/courses/desc/'+result['Department']+'.html">link</a<</span>');
-        result_div.append(dept_orc_div);
-        
-http://www.dartmouth.edu/~reg/courses/desc
 
+
+        
         the_results_div.append(result_div);
     }
     last_result = results;
