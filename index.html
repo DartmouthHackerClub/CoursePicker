@@ -5,6 +5,7 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 		<script type="text/javascript" src="dept_map.js"></script>
         <script type="text/javascript" src="jquery-autocomplete/jquery.autocomplete.min.js"></script>
+        <script type="text/javascript" src="json-sans-eval.js"></script>
 
 		<link rel="stylesheet" type="text/css"  href="pickre.css" />
 		<link rel="stylesheet" type="text/css"  href="jquery-autocomplete/jquery.autocomplete.css" />
@@ -450,9 +451,8 @@ function insert_search_row_dom_element() {
 }
 
 
-function do_search() {
-    the_form = $('#search_form');
-    form_params = the_form.serializeArray();
+function do_search(form_params) {
+    window.location.hash = JSON.stringify(form_params);
     periods = [];
     distribs = [];
 
@@ -664,6 +664,8 @@ JSON.stringify = JSON.stringify || function (obj) {
         return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
     }
 };
+// implement JSON.parse de-serialization
+JSON.parse = JSON.parse || jsonParse
 
 // search options
 var search_options = {
@@ -782,9 +784,11 @@ $().ready(function () {
     //show_favorites();
     $("form#search_form input[type='submit']").click(function () {
     	try{
-        	do_search();
+            the_form = $('#search_form');
+            form_params = the_form.serializeArray();
+            do_search(form_params);
         }catch(e){
-        	//console.log(e.message)
+        	console.log(e.message)
         }
         return false;
     });
@@ -799,7 +803,11 @@ $().ready(function () {
             }
     });
 
-
+    // if they already have a search encoded in the URL, execute it
+    if(window.location.hash){
+        the_params = JSON.parse(window.location.hash);
+        do_search(the_params);
+    }
 });
 </script>
 
