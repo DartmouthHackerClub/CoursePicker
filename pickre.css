@@ -7,6 +7,11 @@ a img{
     margin: 5px 10px 3px 10px;
 }
 
+.term a, .time a {
+    vertical-align: top;
+    font-size: .8em;
+}
+
 @font-face {
     font-family: 'ChunkFiveRegular';
     src: url('font-face/ChunkFive/Chunkfive-webfont.eot');

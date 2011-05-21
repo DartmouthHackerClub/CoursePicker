@@ -123,7 +123,7 @@ function show_results(results) {
         result_div.append(cglink_div);
 
         // term
-        term = $('<span class="term"><span class="fieldname">term </span>' + result['term'] + ' ' + result['year'] + '</span>');
+        term = $('<span class="term"><span class="fieldname">term </span>' + result['term'] + ' ' + result['year'] + '<a href="http://www.dartmouth.edu/~reg/calendars/acad_11_12.html">(?)</a></span>');
         result_div.append(term);
 
         // profs
@@ -153,7 +153,7 @@ function show_results(results) {
         result_div.append(profs_div);
 
         // Period
-        time = $('<span class="time"><span class="fieldname">period </span>' + result['period'] + '</span>');
+        time = $('<span class="time"><span class="fieldname">period </span>' + result['period'] + ' <a href="http://oracle-www.dartmouth.edu/dart/groucho/timetabl.diagram">(?)</a></span>');
         result_div.append(time);
 
 
@@ -213,7 +213,7 @@ function show_results(results) {
         //ORC STUFF
         // Header
         if (result['note'] || result['offered'] || result['description']) {
-            var orc_header_div = $('<h4>From the <a href="http://www.dartmouth.edu/ ~reg/courses/desc/' + result['Description'] + '"> ' + result['Department'] + ' ORC</a> <small>(may be out of date)</small></h4>:');
+            var orc_header_div = $('<h4>From the <a href="http://www.dartmouth.edu/~reg/courses/desc/' + result['Department'] + '.html"> ' + result['Department'] + ' ORC</a> <small>(may be out of date)</small></h4>:');
         result_div.append(orc_header_div);
         }
         // Link to ORC
